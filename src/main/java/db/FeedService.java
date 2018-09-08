@@ -11,14 +11,14 @@ public class FeedService {
 
     public FeedService() {
         try {
-            this.connection = getConnection();
+            this.connection = createConnection();
         }
         catch (SQLException ex){
             throw new IllegalArgumentException("Can't create connection to FeedService db");
         }
     }
 
-    private Connection getConnection() throws SQLException {
+    private static Connection createConnection() throws SQLException {
         Properties props = new Properties();
         props.setProperty("user", CSDatabaseConfig.user);
         props.setProperty("password", CSDatabaseConfig.password);
