@@ -24,11 +24,16 @@ public class FeedService {
             throw new RuntimeException("Can't create connection to FeedService db.\n" + ex.getMessage());
         }
     }
-
+    
     //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
     public void reset() throws SQLException {
-        CreateDB.createFeedTable(connection);
-        CreateDB.createHistoryTable(connection);
+        DBUtils.createFeedTable(connection);
+        DBUtils.createHistoryTable(connection);
+
+    }
+
+    public void dropFeedTable() throws SQLException {
+        DBUtils.dropFeedTable(connection);
     }
 
     public void uploadCsvToFeed() throws SQLException {
@@ -52,4 +57,7 @@ public class FeedService {
         private static final String password = "FFadmin";
         private static final String ddl = "true";
     }
+
+
 }
+

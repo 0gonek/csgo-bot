@@ -4,7 +4,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-class CreateDB {
+class DBUtils {
+
+    private static final String DROP_FEED_SQL =
+            //language=sql
+            "drop table FEED;";
     private static final String CREATE_FEED_SQL =
             //language=sql
             "CREATE TABLE FEED(\n" +
@@ -54,4 +58,11 @@ class CreateDB {
         statement.execute(CREATE_HISTORY_INDEX_SQL);
         System.out.println("History table has been created successfully.");
     }
+
+    static void dropFeedTable(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(DROP_FEED_SQL);
+        System.out.println("FeedService table has been droped successfully.");
+    }
+
 }
