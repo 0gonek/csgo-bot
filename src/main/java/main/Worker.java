@@ -1,12 +1,13 @@
 package main;
 
-import db.Feed;
+import db.FeedService;
 
 import java.sql.SQLException;
 
 public class Worker {
     public static void main(String[] args) throws SQLException {
-        Feed feed = new Feed();
-        feed.createFeedTable();
+        FeedService feedService = new FeedService();
+        feedService.createFeedTable();
+        feedService.uploadCsvToFeed();
     }
 }
