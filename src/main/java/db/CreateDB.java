@@ -19,7 +19,7 @@ class CreateDB {
                     "\tc_quality varchar(256),\n" +
                     "\tc_heroid integer,\n" +
                     "\tc_slot varchar(256),\n" +
-                    "\tc_stickers smallint,\n" +
+                    "\tc_stickers varchar,\n" +
                     "\tc_market_name text,\n" +
                     "\tc_market_name_en text,\n" +
                     "\tc_market_hash_name text,\n" +
