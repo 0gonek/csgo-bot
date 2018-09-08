@@ -6,10 +6,9 @@ import java.sql.Statement;
 
 class CreateDB {
     private static final String CREATE_FEED_SQL =
-
             "create table FEED(\n" +
                     "\tid serial primary key,\n" +
-                    "\tmode smallint,\n" +
+                    "\tmode smallint DEFAULT 0,\n" +
                     "\t\n" +
                     "\tc_classid bigint,\n" +
                     "\tc_instanceid bigint,\n" +
@@ -23,9 +22,11 @@ class CreateDB {
                     "\tc_stickers smallint,\n" +
                     "\tc_market_name text,\n" +
                     "\tc_market_name_en text,\n" +
+                    "\tc_market_hash_name text,\n" +
                     "\tc_name_color varchar(6),\n" +
                     "\tc_price_updated integer,\n" +
-                    "\tc_pop integer\n" +
+                    "\tc_pop integer,\n" +
+                    "\tc_base_id integer\n" +
                     ");";
 
     static void createFeedTable(Connection connection) throws SQLException {
