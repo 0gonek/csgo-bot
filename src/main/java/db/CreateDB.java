@@ -6,10 +6,10 @@ import java.sql.Statement;
 
 class CreateDB {
     private static final String CREATE_FEED_SQL =
-            "create table FEED(\n" +
+            //language=sql
+            "CREATE TABLE FEED(\n" +
                     "\tid serial primary key,\n" +
                     "\tmode smallint DEFAULT 0,\n" +
-                    "\t\n" +
                     "\tc_classid bigint,\n" +
                     "\tc_instanceid bigint,\n" +
                     "\tc_price integer,\n" +
@@ -29,9 +29,29 @@ class CreateDB {
                     "\tc_base_id integer\n" +
                     ");";
 
+    private static final String CREATE_HISTORY_SQL =
+            //language=sql
+            "CREATE TABLE HISTORY(\n" +
+                    "  id serial primary key,\n" +
+                    "  update_time bigint,\n" +
+                    "  c_classid bigint,\n" +
+                    "\tc_instanceid bigint\n" +
+                    ");";
+
+    private static final String CREATE_HISTORY_INDEX_SQL =
+            //language=sql
+            "CREATE INDEX name_index ON HISTORY (c_classid, c_instanceid);";
+
     static void createFeedTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(CREATE_FEED_SQL);
-        System.out.println("FeedService table has been created successfully.");
+        System.out.println("Feed table has been created successfully.");
+    }
+
+    static void createHistoryTable(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(CREATE_HISTORY_SQL);
+        statement.execute(CREATE_HISTORY_INDEX_SQL);
+        System.out.println("History table has been created successfully.");
     }
 }

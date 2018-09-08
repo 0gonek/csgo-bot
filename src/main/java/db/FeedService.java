@@ -25,8 +25,10 @@ public class FeedService {
         }
     }
 
-    public void createFeedTable() throws SQLException {
+    //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
+    public void reset() throws SQLException {
         CreateDB.createFeedTable(connection);
+        CreateDB.createHistoryTable(connection);
     }
 
     public void uploadCsvToFeed() throws SQLException {
