@@ -11,7 +11,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.postgresql:postgresql:unknown" level="project" />
+    <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.2.5" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.6.2" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
     <orderEntry type="library" name="Maven: javax.interceptor:javax.interceptor-api:1.2" level="project" />
