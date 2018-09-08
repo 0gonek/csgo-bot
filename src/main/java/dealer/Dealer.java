@@ -2,20 +2,25 @@ package dealer;
 
 public class Dealer implements Runnable {
 
-    private Requests requests;
-
-    public Dealer() {
-        this.requests = new Requests();
-    }
-
     public void run() {
         while (true){
-            requests.getBestSellOffer();
+            selectItemId();
+            getItemHistory();
+            getBestSellOffer();
+            decideAndBuy();
             try {
-                Thread.sleep(300);
+                Thread.sleep(500);
             }catch (InterruptedException ex){
                 ex.printStackTrace();
             }
         }
     }
+
+    private void selectItemId(){}
+
+    private void getItemHistory(){}
+
+    private void getBestSellOffer(){}
+
+    private void decideAndBuy(){}
 }
