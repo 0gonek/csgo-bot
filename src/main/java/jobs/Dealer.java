@@ -1,4 +1,4 @@
-package dealer;
+package jobs;
 
 import db.FeedService;
 

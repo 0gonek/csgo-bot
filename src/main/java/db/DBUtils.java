@@ -56,6 +56,7 @@ class DBUtils {
                     "  min bigint,\n" +
                     "  max bigint,\n" +
                     "  avg bigint,\n" +
+                    "  num int,\n" +
                     "  c_classid bigint,\n" +
                     "\tc_instanceid bigint\n" +
                     ")";

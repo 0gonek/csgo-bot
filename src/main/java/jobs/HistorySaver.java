@@ -1,4 +1,4 @@
-package dealer;
+package jobs;
 
 import com.google.gson.Gson;
 import db.FeedService;
@@ -32,20 +32,24 @@ public class HistorySaver implements Runnable {
             selectItemId();
             try {
                 entityId = feedService.getClassIdEntityIdByRowNum(i);
+                if(entityId == null) {
+                    System.out.println("Have no key for row " + (i+1));
+                    continue;
+                }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
             ItemHistory itemHistory = getItemHistory(entityId.getKey(), entityId.getValue());
             try {
+                Thread.sleep(300);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            try {
                 feedService.deleteOldHistory(entityId.getKey(), entityId.getValue());
                 feedService.deleteOldStats(entityId.getKey(), entityId.getValue());
                 feedService.saveItemHistoryAndStats(itemHistory, entityId.getKey(), entityId.getValue());
             } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }
