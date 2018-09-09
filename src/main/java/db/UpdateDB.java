@@ -19,9 +19,9 @@ public class UpdateDB implements Runnable {
         while (true) {
             try {
                 CSVFileName fileName = checkDBName();
-                this.wait(1000);
+                Thread.sleep(1000);
                 downloadCSV(fileName.getDb());
-                this.wait(60000);
+                Thread.sleep(60000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 return;
@@ -54,9 +54,6 @@ public class UpdateDB implements Runnable {
         }
 
         Gson gson = new Gson();
-
-        System.out.println(response.toString());
-
         return gson.fromJson(response.toString(), CSVFileName.class);
 
     }
