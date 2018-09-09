@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -38,6 +39,7 @@ class DBUtils {
             "CREATE TABLE HISTORY(\n" +
                     "  id serial primary key,\n" +
                     "  update_time bigint,\n" +
+                    "  price bigint,\n" +
                     "  c_classid bigint,\n" +
                     "\tc_instanceid bigint\n" +
                     ");";
@@ -45,6 +47,23 @@ class DBUtils {
     private static final String CREATE_HISTORY_INDEX_SQL =
             //language=sql
             "CREATE INDEX name_index ON HISTORY (c_classid, c_instanceid);";
+
+    private static final String CREATE_STATS_SQL =
+            //language=sql
+            "CREATE TABLE STATS(\n" +
+                    "  id serial primary key,\n" +
+                    "  first_update_time bigint,\n" +
+                    "  min bigint,\n" +
+                    "  max bigint,\n" +
+                    "  avg bigint,\n" +
+                    "  num int,\n" +
+                    "  c_classid bigint,\n" +
+                    "\tc_instanceid bigint\n" +
+                    ")";
+
+    private static final String CREATE_STATS_INDEX_SQL =
+            //language=sql
+            "CREATE INDEX name_status_index ON STATS (c_classid, c_instanceid);";
 
     static void createFeedTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
@@ -59,10 +78,26 @@ class DBUtils {
         System.out.println("History table has been created successfully.");
     }
 
+    static void createStatsTable(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(CREATE_STATS_SQL);
+        statement.execute(CREATE_STATS_INDEX_SQL);
+        System.out.println("Stats table has been created successfully.");
+    }
+
     static void dropFeedTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(DROP_FEED_SQL);
         System.out.println("FeedService table has been droped successfully.");
     }
 
+    static int getFeedRowCount(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+        );
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM FEED;");
+        resultSet.last();
+        return resultSet.getRow();
+    }
 }

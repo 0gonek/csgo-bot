@@ -1,7 +1,8 @@
 package main;
 
 import db.FeedService;
-import db.UpdateDB;
+import jobs.HistorySaver;
+import jobs.ModeSetter;
 
 import java.sql.SQLException;
 
@@ -11,7 +12,12 @@ public class Worker {
 //        feedService.reset();
 //        feedService.dropFeedTable();
 //        feedService.uploadCsvToFeed();
-        Thread tr = new Thread(new UpdateDB());
-        tr.start();
+//        Thread tr = new Thread(new UpdateDB());
+//        tr.start();
+//        Thread historySaver = new Thread(new HistorySaver());
+//        historySaver.start();
+
+        Thread modeSetter = new Thread(new ModeSetter());
+        modeSetter.start();
     }
 }
