@@ -1,10 +1,12 @@
 package jobs;
 
 import com.google.gson.Gson;
+import db.ConstsService;
 import db.FeedService;
 import db.HistoryStatsService;
 import javafx.util.Pair;
 import pojo.ItemHistory;
+import resources.Props;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,10 +25,12 @@ public class HistorySaver implements Runnable {
 
     private FeedService feedService;
     private HistoryStatsService historyStatsService;
+    private ConstsService constsService;
 
     public HistorySaver() {
         this.feedService = new FeedService();
         this.historyStatsService = new HistoryStatsService();
+        this.constsService = new ConstsService();
     }
 
     private List<Pair<Long, Long>> keys;
@@ -78,6 +82,16 @@ public class HistorySaver implements Runnable {
                 iteration++;
                 if (iteration % 500 == 0)
                     System.out.println("History saver iteration = " + iteration);
+            }
+            try {
+                if (constsService.getConst(Props.HISTORY_LAST_UPDATE_TIME) != null) {
+                    constsService.updateConst(Props.HISTORY_LAST_UPDATE_TIME, System.currentTimeMillis(), null);
+                }
+                else {
+                    constsService.addConst(Props.HISTORY_LAST_UPDATE_TIME, System.currentTimeMillis(), null);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
             globalIteration++;
             System.out.println("Global iteration " + globalIteration + " of story saving have been done.");
