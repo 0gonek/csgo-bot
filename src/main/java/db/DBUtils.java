@@ -1,9 +1,7 @@
 package db;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Properties;
 
 class DBUtils {
 
@@ -59,11 +57,32 @@ class DBUtils {
                     "  num int,\n" +
                     "  c_classid bigint,\n" +
                     "\tc_instanceid bigint\n" +
-                    ")";
+                    ");";
 
     private static final String CREATE_STATS_INDEX_SQL =
             //language=sql
             "CREATE INDEX name_status_index ON STATS (c_classid, c_instanceid);";
+
+    private static final String CREATE_CONSTS_TABLE_SQL =
+            //language=sql
+            "CREATE TABLE CONSTS(" +
+                    " const_key VARCHAR PRIMARY KEY," +
+                    " long_value bigint," +
+                    " string_value VARCHAR " +
+                    ");";
+
+    private static final String CREATE_CONSTS_INDEX_SQL =
+            //language=sql
+            "CREATE INDEX key_consts_index ON CONSTS (const_key);";
+
+    //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
+    public void reset() throws SQLException {
+        Connection connection = createConnection();
+        DBUtils.createFeedTable(connection);
+        DBUtils.createHistoryTable(connection);
+        DBUtils.createStatsTable(connection);
+        DBUtils.createConstsTable(connection);
+    }
 
     static void createFeedTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
@@ -85,6 +104,13 @@ class DBUtils {
         System.out.println("Stats table has been created successfully.");
     }
 
+    static void createConstsTable(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(CREATE_CONSTS_TABLE_SQL);
+        statement.execute(CREATE_CONSTS_INDEX_SQL);
+        System.out.println("Consts table has been created successfully.");
+    }
+
     static void dropFeedTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(DROP_FEED_SQL);
@@ -99,5 +125,21 @@ class DBUtils {
         ResultSet resultSet = statement.executeQuery("SELECT * FROM FEED;");
         resultSet.last();
         return resultSet.getRow();
+    }
+
+    static Connection createConnection() throws SQLException {
+        Properties props = new Properties();
+        props.setProperty("user", DBUtils.CSDatabaseConfig.user);
+        props.setProperty("password", DBUtils.CSDatabaseConfig.password);
+        props.setProperty("ddl", DBUtils.CSDatabaseConfig.ddl);
+        Connection conn = DriverManager.getConnection(DBUtils.CSDatabaseConfig.url, props);
+        return conn;
+    }
+
+    private static class CSDatabaseConfig {
+        private static final String url = "jdbc:postgresql://localhost:5432/cs";
+        private static final String user = "postgres";
+        private static final String password = "FFadmin";
+        private static final String ddl = "true";
     }
 }

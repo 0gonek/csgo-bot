@@ -2,6 +2,7 @@ package jobs;
 
 import com.google.gson.Gson;
 import db.FeedService;
+import db.HistoryStatsService;
 import javafx.util.Pair;
 import pojo.ItemHistory;
 
@@ -18,13 +19,31 @@ public class HistorySaver implements Runnable {
     private static final String URL_PREFIX = "https://market.csgo.com/api/";
     private static final String KEY = "cAhlC0P31b7Ywu7F819mZmT973DYlX9";
 
-    private FeedService feedService = new FeedService();
+    private static final long MIN_PAUSE_BETWEEN_REQUESTS = 300;
+
+    private FeedService feedService;
+    private HistoryStatsService historyStatsService;
+
+    public HistorySaver() {
+        this.feedService = new FeedService();
+        this.historyStatsService = new HistoryStatsService();
+    }
 
     private List<Pair<Long, Long>> keys;
     private int iteration;
     private int globalIteration = 0;
+    private long lastRequestTime = 0;
+
+    public ItemHistory getItemHistory(long classid, long instanceid) throws SQLException {
+        ItemHistory itemHistory = downloadItemHistory(classid, instanceid);
+        historyStatsService.deleteOldHistory(classid, instanceid);
+        historyStatsService.deleteOldStats(classid, instanceid);
+        historyStatsService.saveItemHistoryAndStats(itemHistory, classid, instanceid);
+        return itemHistory;
+    }
 
     public void run() {
+        System.out.println("History saver started.");
         while (true) {
             try {
                 keys = feedService.getAllFeedKeys();
@@ -40,16 +59,19 @@ public class HistorySaver implements Runnable {
                     System.out.println("Bad entity key: " + entityId.getKey() + " : " + entityId.getValue());
                     continue;
                 }
-                ItemHistory itemHistory = getItemHistory(entityId.getKey(), entityId.getValue());
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                while (System.currentTimeMillis() - lastRequestTime < MIN_PAUSE_BETWEEN_REQUESTS) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
                 }
+                ItemHistory itemHistory = downloadItemHistory(entityId.getKey(), entityId.getValue());
+                lastRequestTime = System.currentTimeMillis();
                 try {
-                    feedService.deleteOldHistory(entityId.getKey(), entityId.getValue());
-                    feedService.deleteOldStats(entityId.getKey(), entityId.getValue());
-                    feedService.saveItemHistoryAndStats(itemHistory, entityId.getKey(), entityId.getValue());
+                    historyStatsService.deleteOldHistory(entityId.getKey(), entityId.getValue());
+                    historyStatsService.deleteOldStats(entityId.getKey(), entityId.getValue());
+                    historyStatsService.saveItemHistoryAndStats(itemHistory, entityId.getKey(), entityId.getValue());
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -62,7 +84,7 @@ public class HistorySaver implements Runnable {
         }
     }
 
-    private ItemHistory getItemHistory(long classid, long instanceid) {
+    private ItemHistory downloadItemHistory(long classid, long instanceid) {
         String url = URL_PREFIX + "ItemHistory/" + classid + "_" + instanceid + "/?key=" + KEY;
         try {
             URL obj = new URL(url);

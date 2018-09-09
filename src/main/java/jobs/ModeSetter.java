@@ -1,6 +1,7 @@
 package jobs;
 
 import db.FeedService;
+import db.HistoryStatsService;
 import javafx.util.Pair;
 import pojo.PriceTime;
 
@@ -16,12 +17,15 @@ public class ModeSetter implements Runnable {
     private static final long MAX_VALID_AV_PRICE = 100000;  // 1000 рублей
 
     private FeedService feedService;
+    private HistoryStatsService historyStatsService;
 
     public ModeSetter() {
         this.feedService = new FeedService();
+        this.historyStatsService = new HistoryStatsService();
     }
 
     public void run() {
+        System.out.println("Mode setter started.");
         try {
             setAllMods();
         } catch (SQLException ex) {
@@ -55,7 +59,7 @@ public class ModeSetter implements Runnable {
             return 9;
         }
 
-        List<PriceTime> history = feedService.getHistory(key.getKey(), key.getValue());
+        List<PriceTime> history = historyStatsService.getHistory(key.getKey(), key.getValue());
         if (history == null) {
             feedService.setUpModeOnDB(key.getKey(), key.getValue(), 8);
             return 8;
@@ -72,7 +76,7 @@ public class ModeSetter implements Runnable {
                 history) {
             avPrice += priceTime.getL_price();
 
-            // TODO: Вероятно достаттончо просто взять последний элемент листа, надо тестить!!
+            // TODO: Вероятно достаточно просто взять последний элемент листа, надо тестить!!
             if (priceTime.getL_time() < firstSell)
                 firstSell = priceTime.getL_time();
 

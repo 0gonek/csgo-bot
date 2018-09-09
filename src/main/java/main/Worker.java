@@ -1,8 +1,6 @@
 package main;
 
-import db.FeedService;
 import jobs.HistorySaver;
-import jobs.ModeSetter;
 
 import java.sql.SQLException;
 
@@ -19,5 +17,6 @@ public class Worker {
 
 //        Thread modeSetter = new Thread(new ModeSetter());
 //        modeSetter.start();
+//        feedService.reset();
     }
 }
