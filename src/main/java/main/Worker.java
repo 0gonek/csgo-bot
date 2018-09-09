@@ -14,10 +14,10 @@ public class Worker {
 //        feedService.uploadCsvToFeed();
 //        Thread tr = new Thread(new UpdateDB());
 //        tr.start();
-//        Thread historySaver = new Thread(new HistorySaver());
-//        historySaver.start();
+        Thread historySaver = new Thread(new HistorySaver());
+        historySaver.start();
 
-        Thread modeSetter = new Thread(new ModeSetter());
-        modeSetter.start();
+//        Thread modeSetter = new Thread(new ModeSetter());
+//        modeSetter.start();
     }
 }

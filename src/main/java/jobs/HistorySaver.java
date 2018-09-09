@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 
 public class HistorySaver implements Runnable {
 
@@ -19,39 +20,45 @@ public class HistorySaver implements Runnable {
 
     private FeedService feedService = new FeedService();
 
-    private int i, rowsCount;
-    private Pair<Long, Long> entityId = new Pair<Long, Long>(0L, 0L);
-
-    public HistorySaver() {
-        this.i = 0;
-        this.rowsCount = 0;
-    }
+    private List<Pair<Long, Long>> keys;
+    private int iteration;
+    private int globalIteration = 0;
 
     public void run() {
         while (true) {
-            selectItemId();
             try {
-                entityId = feedService.getClassIdEntityIdByRowNum(i);
-                if(entityId == null) {
-                    System.out.println("Have no key for row " + (i+1));
+                keys = feedService.getAllFeedKeys();
+                iteration = 0;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                continue;
+            }
+
+            for (Pair<Long, Long> entityId :
+                    keys) {
+                if (entityId == null || entityId.getKey() == null || entityId.getValue() == null) {
+                    System.out.println("Bad entity key: " + entityId.getKey() + " : " + entityId.getValue());
                     continue;
                 }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+                ItemHistory itemHistory = getItemHistory(entityId.getKey(), entityId.getValue());
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    feedService.deleteOldHistory(entityId.getKey(), entityId.getValue());
+                    feedService.deleteOldStats(entityId.getKey(), entityId.getValue());
+                    feedService.saveItemHistoryAndStats(itemHistory, entityId.getKey(), entityId.getValue());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                iteration++;
+                if (iteration % 500 == 0)
+                    System.out.println("History saver iteration = " + iteration);
             }
-            ItemHistory itemHistory = getItemHistory(entityId.getKey(), entityId.getValue());
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-            try {
-                feedService.deleteOldHistory(entityId.getKey(), entityId.getValue());
-                feedService.deleteOldStats(entityId.getKey(), entityId.getValue());
-                feedService.saveItemHistoryAndStats(itemHistory, entityId.getKey(), entityId.getValue());
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            globalIteration++;
+            System.out.println("Global iteration " + globalIteration + " of story saving have been done.");
         }
     }
 
@@ -82,22 +89,6 @@ public class HistorySaver implements Runnable {
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
-        }
-    }
-
-    private void selectItemId() {
-        if (i < rowsCount) {
-            i++;
-            if (i % 1000 == 0)
-                System.out.println("History saver downloading row number " + (i + 1));
-        } else {
-            System.out.println("History saver: i = " + i + " -> 0, Row count in feed = " + rowsCount);
-            i = 0;
-            try {
-                rowsCount = feedService.getFeedRowCount();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 }
