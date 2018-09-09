@@ -48,6 +48,22 @@ class DBUtils {
             //language=sql
             "CREATE INDEX name_index ON HISTORY (c_classid, c_instanceid);";
 
+    private static final String CREATE_STATS_SQL =
+            //language=sql
+            "CREATE TABLE STATS(\n" +
+                    "  id serial primary key,\n" +
+                    "  first_update_time bigint,\n" +
+                    "  min bigint,\n" +
+                    "  max bigint,\n" +
+                    "  avg bigint,\n" +
+                    "  c_classid bigint,\n" +
+                    "\tc_instanceid bigint\n" +
+                    ")";
+
+    private static final String CREATE_STATS_INDEX_SQL =
+            //language=sql
+            "CREATE INDEX name_status_index ON STATS (c_classid, c_instanceid);";
+
     static void createFeedTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(CREATE_FEED_SQL);
@@ -59,6 +75,13 @@ class DBUtils {
         statement.execute(CREATE_HISTORY_SQL);
         statement.execute(CREATE_HISTORY_INDEX_SQL);
         System.out.println("History table has been created successfully.");
+    }
+
+    static void createStatsTable(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(CREATE_STATS_SQL);
+        statement.execute(CREATE_STATS_INDEX_SQL);
+        System.out.println("Stats table has been created successfully.");
     }
 
     static void dropFeedTable(Connection connection) throws SQLException {

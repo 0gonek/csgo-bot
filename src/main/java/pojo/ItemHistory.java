@@ -6,13 +6,13 @@ public class ItemHistory {
     private long max;
     private long min;
     private long average;
-    private long number;
+    private int number;
     private PriceTime[] history;
 
     public ItemHistory() {
     }
 
-    public ItemHistory(boolean success, long max, long min, long average, long number, PriceTime[] history) {
+    public ItemHistory(boolean success, long max, long min, long average, int number, PriceTime[] history) {
         this.success = success;
         this.max = max;
         this.min = min;
@@ -53,11 +53,11 @@ public class ItemHistory {
         this.average = average;
     }
 
-    public long getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 

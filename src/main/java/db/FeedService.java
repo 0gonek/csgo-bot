@@ -32,7 +32,7 @@ public class FeedService {
     public void reset() throws SQLException {
         DBUtils.createFeedTable(connection);
         DBUtils.createHistoryTable(connection);
-
+        DBUtils.createStatsTable(connection);
     }
 
     public void dropFeedTable() throws SQLException {
@@ -65,17 +65,27 @@ public class FeedService {
     public void deleteOldHistory(Long c_classid, Long c_instanceid) throws SQLException {
         Statement statement = connection.createStatement();
         String query =
+                //language=sql
                 "DELETE FROM history WHERE c_classid = " + c_classid + " AND c_instanceid = " + c_instanceid + ";";
         statement.executeUpdate(query);
     }
 
-    public void saveItemHistory(ItemHistory itemHistory, Long c_classid, Long c_instanceid) throws SQLException {
+    public void deleteOldStats(Long c_classid, Long c_instanceid) throws SQLException {
+        Statement statement = connection.createStatement();
+        String query =
+                //language=sql
+                "DELETE FROM stats WHERE c_classid = " + c_classid + " AND c_instanceid = " + c_instanceid + ";";
+        statement.executeUpdate(query);
+    }
+
+    public void saveItemHistoryAndStats(ItemHistory itemHistory, Long c_classid, Long c_instanceid) throws SQLException {
         if(itemHistory == null || itemHistory.getHistory() == null)
             return;
         for (PriceTime priceTime :
                 itemHistory.getHistory()) {
             Statement statement = connection.createStatement();
             String query =
+                    //language=sql
                     "INSERT INTO history (update_time, price, c_classid, c_instanceid)" +
                             " VALUES (" + priceTime.getL_time() +
                             ", " + priceTime.getL_price() +
@@ -85,6 +95,19 @@ public class FeedService {
                     ;
             statement.executeUpdate(query);
         }
+        Statement statement = connection.createStatement();
+        String query =
+                //language=sql
+                "INSERT INTO stats (first_update_time, min, max, avg, c_classid, c_instanceid)" +
+                        " VALUES (" + itemHistory.getHistory()[itemHistory.getNumber()-1].getL_time() +
+                        ", " + itemHistory.getMin() +
+                        ", " + itemHistory.getMax() +
+                        ", " + itemHistory.getAverage() +
+                        ", " + c_classid +
+                        ", " + c_instanceid +
+                        ");"
+                ;
+        statement.executeUpdate(query);
     }
 
     private static Connection createConnection() throws SQLException {

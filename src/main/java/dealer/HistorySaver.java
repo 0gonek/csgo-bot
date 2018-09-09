@@ -38,7 +38,8 @@ public class HistorySaver implements Runnable {
             ItemHistory itemHistory = getItemHistory(entityId.getKey(), entityId.getValue());
             try {
                 feedService.deleteOldHistory(entityId.getKey(), entityId.getValue());
-                feedService.saveItemHistory(itemHistory, entityId.getKey(), entityId.getValue());
+                feedService.deleteOldStats(entityId.getKey(), entityId.getValue());
+                feedService.saveItemHistoryAndStats(itemHistory, entityId.getKey(), entityId.getValue());
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -72,20 +73,21 @@ public class HistorySaver implements Runnable {
             } catch (NullPointerException ex) {
                 return null;
             }
-        }
-        catch (IOException ex){
+        } catch (IOException ex) {
             return null;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
     }
 
     private void selectItemId() {
-        if (i < rowsCount)
+        if (i < rowsCount) {
             i++;
-        else {
+            if (i % 1000 == 0)
+                System.out.println("History saver downloading row number " + (i + 1));
+        } else {
+            System.out.println("History saver: i = " + i + " -> 0, Row count in feed = " + rowsCount);
             i = 0;
             try {
                 rowsCount = feedService.getFeedRowCount();
