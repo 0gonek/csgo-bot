@@ -1,6 +1,7 @@
 package db;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -38,6 +39,7 @@ class DBUtils {
             "CREATE TABLE HISTORY(\n" +
                     "  id serial primary key,\n" +
                     "  update_time bigint,\n" +
+                    "  price bigint,\n" +
                     "  c_classid bigint,\n" +
                     "\tc_instanceid bigint\n" +
                     ");";
@@ -65,4 +67,13 @@ class DBUtils {
         System.out.println("FeedService table has been droped successfully.");
     }
 
+    static int getFeedRowCount(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+        );
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM FEED;");
+        resultSet.last();
+        return resultSet.getRow();
+    }
 }

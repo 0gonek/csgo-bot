@@ -1,6 +1,7 @@
 package main;
 
 import db.FeedService;
+import dealer.HistorySaver;
 import db.UpdateDB;
 
 import java.sql.SQLException;
@@ -13,5 +14,7 @@ public class Worker {
 //        feedService.uploadCsvToFeed();
         Thread tr = new Thread(new UpdateDB());
         tr.start();
+        Thread thread = new Thread(new HistorySaver());
+        thread.start();
     }
 }

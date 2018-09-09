@@ -1,9 +1,10 @@
 package db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javafx.util.Pair;
+import pojo.ItemHistory;
+import pojo.PriceTime;
+
+import java.sql.*;
 import java.util.Properties;
 
 import static resources.Props.CSV_FILE;
@@ -26,7 +27,7 @@ public class FeedService {
             throw new RuntimeException("Can't create connection to FeedService db.\n" + ex.getMessage());
         }
     }
-    
+
     //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
     public void reset() throws SQLException {
         DBUtils.createFeedTable(connection);
@@ -38,10 +39,52 @@ public class FeedService {
         DBUtils.dropFeedTable(connection);
     }
 
+    public int getFeedRowCount() throws SQLException {
+        return DBUtils.getFeedRowCount(connection);
+    }
+
     public void uploadCsvToFeed() throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(CSV_TO_FEED);
         System.out.println("CSV uploaded successfully.");
+    }
+
+    public Pair<Long, Long> getClassIdEntityIdByRowNum(int i) throws SQLException {
+        Statement statement = connection.createStatement();
+        String query =
+                "SELECT c_classid, c_instanceid FROM (\n" +
+                        "                SELECT c_classid, c_instanceid, ROW_NUMBER () OVER ()\n" +
+                        "                FROM Feed\n" +
+                        "              ) x WHERE ROW_NUMBER = " + (i + 1) + ";";
+        ResultSet resultSet = statement.executeQuery(query);
+        resultSet.next();
+        if (resultSet == null) throw new RuntimeException("Feed is empty");
+        return new Pair<Long, Long>(resultSet.getLong("c_classid"), resultSet.getLong("c_instanceid"));
+    }
+
+    public void deleteOldHistory(Long c_classid, Long c_instanceid) throws SQLException {
+        Statement statement = connection.createStatement();
+        String query =
+                "DELETE FROM history WHERE c_classid = " + c_classid + " AND c_instanceid = " + c_instanceid + ";";
+        statement.executeUpdate(query);
+    }
+
+    public void saveItemHistory(ItemHistory itemHistory, Long c_classid, Long c_instanceid) throws SQLException {
+        if(itemHistory == null || itemHistory.getHistory() == null)
+            return;
+        for (PriceTime priceTime :
+                itemHistory.getHistory()) {
+            Statement statement = connection.createStatement();
+            String query =
+                    "INSERT INTO history (update_time, price, c_classid, c_instanceid)" +
+                            " VALUES (" + priceTime.getL_time() +
+                            ", " + priceTime.getL_price() +
+                            ", " + c_classid +
+                            ", " + c_instanceid +
+                            ");"
+                    ;
+            statement.executeUpdate(query);
+        }
     }
 
     private static Connection createConnection() throws SQLException {
