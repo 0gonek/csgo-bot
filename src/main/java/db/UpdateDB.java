@@ -1,6 +1,7 @@
 package db;
 
 import com.google.gson.Gson;
+import http.HttpService;
 import pojo.CSVFileName;
 
 import java.io.*;
@@ -18,9 +19,10 @@ public class UpdateDB implements Runnable {
     public void run() {
         while (true) {
             try {
-                CSVFileName fileName = checkDBName();
+                Gson gson = new Gson();
+                CSVFileName fileName = gson.fromJson(HttpService.sendGETReq(CURRENT_DB_HTTP), CSVFileName.class);
                 Thread.sleep(1000);
-                downloadCSV(fileName.getDb());
+                HttpService.downLoadFile(DOWNLOAD_CSV+fileName.getDb(), CSV_FILE);
                 Thread.sleep(60000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -29,66 +31,5 @@ public class UpdateDB implements Runnable {
         }
     }
 
-    private CSVFileName checkDBName(){
-        URL obj;
-        HttpURLConnection con;
-        StringBuffer response;
-        try{
-            obj = new URL(CURRENT_DB_HTTP);
-            con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod("GET");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        Gson gson = new Gson();
-        return gson.fromJson(response.toString(), CSVFileName.class);
-
-    }
-
-    private void downloadCSV(String nameDB) {
-        URL obj;
-        HttpURLConnection con;
-        try {
-            obj = new URL(DOWNLOAD_CSV + nameDB);
-            con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod("GET");
-            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            File csv = new File(CSV_FILE);
-            String newLine;
-
-            if (!csv.exists()) {
-                csv.createNewFile();
-            }
-
-            BufferedWriter bw = new BufferedWriter(new FileWriter(csv));
-            while ((newLine = br.readLine()) != null) {
-                bw.write(newLine);
-                bw.newLine();
-            }
-
-            bw.flush();
-            bw.close();
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-    }
 
 }
