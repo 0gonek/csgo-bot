@@ -3,12 +3,12 @@ package db;
 import com.google.gson.Gson;
 import pojo.CSVFileName;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static resources.Props.CSV_FILE;
 
 public class UpdateDB implements Runnable {
 
@@ -16,7 +16,17 @@ public class UpdateDB implements Runnable {
     private static String DOWNLOAD_CSV = "https://market.csgo.com/itemdb/";
 
     public void run() {
-
+        while (true) {
+            try {
+                CSVFileName fileName = checkDBName();
+                this.wait(1000);
+                downloadCSV(fileName.getDb());
+                this.wait(60000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
     }
 
     private CSVFileName checkDBName(){
@@ -44,7 +54,44 @@ public class UpdateDB implements Runnable {
         }
 
         Gson gson = new Gson();
+
+        System.out.println(response.toString());
+
         return gson.fromJson(response.toString(), CSVFileName.class);
+
+    }
+
+    private void downloadCSV(String nameDB) {
+        URL obj;
+        HttpURLConnection con;
+        try {
+            obj = new URL(DOWNLOAD_CSV + nameDB);
+            con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            File csv = new File(CSV_FILE);
+            String newLine;
+
+            if (!csv.exists()) {
+                csv.createNewFile();
+            }
+
+            BufferedWriter bw = new BufferedWriter(new FileWriter(csv));
+            while ((newLine = br.readLine()) != null) {
+                bw.write(newLine);
+                bw.newLine();
+            }
+
+            bw.flush();
+            bw.close();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
     }
 
 }

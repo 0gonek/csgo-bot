@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import static resources.Props.CSV_FILE;
+
 public class FeedService {
 
     private static final String CSV_TO_FEED =
@@ -13,7 +15,7 @@ public class FeedService {
             "COPY FEED(c_classid,c_instanceid,c_price,c_offers,c_popularity,c_rarity," +
                     "c_quality,c_heroid,c_slot,c_stickers,c_market_name,c_market_name_en," +
                     "c_market_hash_name,c_name_color,c_price_updated,c_pop,c_base_id) \n" +
-                    "FROM 'D:\\cs-go-bot\\csv\\Feed.csv' WITH  DELIMITER ';' CSV HEADER";
+                    "FROM '"+ CSV_FILE +"' WITH  DELIMITER ';' CSV HEADER";
 
     private final Connection connection;
 
