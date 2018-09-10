@@ -2,23 +2,17 @@ package pojo;
 
 public class Item {
     private String i_quality;
-    private String i_name_color;
-    private String i_class_id;
-    private String i_instance_id;
-    private String i_market_hash_name;
-    private String i_market_name;
+    private String i_classid;
+    private String i_instanceid;
     private double ui_price;
     private String app;
 
     public Item(){}
 
-    public Item(String i_quality, String i_name_color, String i_class_id, String i_instance_id, String i_market_hash_name, String i_market_name, double ui_price, String app) {
+    public Item(String i_quality, String i_classid, String i_instanceid, double ui_price, String app) {
         this.i_quality = i_quality;
-        this.i_name_color = i_name_color;
-        this.i_class_id = i_class_id;
-        this.i_instance_id = i_instance_id;
-        this.i_market_hash_name = i_market_hash_name;
-        this.i_market_name = i_market_name;
+        this.i_classid = i_classid;
+        this.i_instanceid = i_instanceid;
         this.ui_price = ui_price;
         this.app = app;
     }
@@ -31,44 +25,20 @@ public class Item {
         this.i_quality = i_quality;
     }
 
-    public String getI_name_color() {
-        return i_name_color;
+    public String getI_classid() {
+        return i_classid;
     }
 
-    public void setI_name_color(String i_name_color) {
-        this.i_name_color = i_name_color;
+    public void setI_classid(String i_classid) {
+        this.i_classid = i_classid;
     }
 
-    public String getI_class_id() {
-        return i_class_id;
+    public String getI_instanceid() {
+        return i_instanceid;
     }
 
-    public void setI_class_id(String i_class_id) {
-        this.i_class_id = i_class_id;
-    }
-
-    public String getI_instance_id() {
-        return i_instance_id;
-    }
-
-    public void setI_instance_id(String i_instance_id) {
-        this.i_instance_id = i_instance_id;
-    }
-
-    public String getI_market_hash_name() {
-        return i_market_hash_name;
-    }
-
-    public void setI_market_hash_name(String i_market_hash_name) {
-        this.i_market_hash_name = i_market_hash_name;
-    }
-
-    public String getI_market_name() {
-        return i_market_name;
-    }
-
-    public void setI_market_name(String i_market_name) {
-        this.i_market_name = i_market_name;
+    public void setI_instanceid(String i_instanceid) {
+        this.i_instanceid = i_instanceid;
     }
 
     public double getUi_price() {
@@ -87,8 +57,9 @@ public class Item {
         this.app = app;
     }
 
+    //todo: убрать i_quality
     @Override
     public String toString() {
-        return this.i_class_id + "_" + this.i_instance_id;
+        return this.i_classid + "_" + this.i_instanceid + "_" + this.i_quality;
     }
 }
