@@ -16,10 +16,13 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
+import static resources.Props.KEY;
+
+
 public class HistorySaver implements Runnable {
 
     private static final String URL_PREFIX = "https://market.csgo.com/api/";
-    private static final String KEY = "cAhlC0P31b7Ywu7F819mZmT973DYlX9";
+
 
     private static final long MIN_PAUSE_BETWEEN_REQUESTS = 300;
 
