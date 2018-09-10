@@ -1,18 +1,8 @@
 package main;
 
-import com.google.gson.Gson;
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
-import com.neovisionaries.ws.client.WebSocketFactory;
-import jobs.HistorySaver;
-import pojo.Item;
-import websockets.ServerListener;
+import websockets.NewItemGoListener;
 
-import java.io.IOException;
 import java.sql.SQLException;
-
-import static resources.Props.WSS;
 
 public class Worker {
     public static void main(String[] args) throws SQLException {
@@ -25,8 +15,15 @@ public class Worker {
 //        Thread historySaver = new Thread(new HistorySaver());
 //        historySaver.start();
 
-        Thread tr = new Thread(new ServerListener());
-        tr.start();
+            NewItemGoListener nl = new NewItemGoListener();
+            nl.connect();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e ) {
+                e.printStackTrace();
+            }
+
+            nl.disconnect();
 
 //        Thread modeSetter = new Thread(new ModeSetter());
 //        modeSetter.start();
