@@ -25,8 +25,8 @@ public class Worker {
 //        Thread historySaver = new Thread(new HistorySaver());
 //        historySaver.start();
 
-//        Thread tr = new Thread(new ServerListener());
-//        tr.start();
+        Thread tr = new Thread(new ServerListener());
+        tr.start();
 
 //        Thread modeSetter = new Thread(new ModeSetter());
 //        modeSetter.start();

@@ -5,16 +5,14 @@ public class Item {
     private String i_classid;
     private String i_instanceid;
     private double ui_price;
-    private String app;
 
     public Item(){}
 
-    public Item(String i_quality, String i_classid, String i_instanceid, double ui_price, String app) {
+    public Item(String i_quality, String i_classid, String i_instanceid, double ui_price) {
         this.i_quality = i_quality;
         this.i_classid = i_classid;
         this.i_instanceid = i_instanceid;
         this.ui_price = ui_price;
-        this.app = app;
     }
 
     public String getI_quality() {
@@ -49,17 +47,8 @@ public class Item {
         this.ui_price = ui_price;
     }
 
-    public String getApp() {
-        return app;
-    }
-
-    public void setApp(String app) {
-        this.app = app;
-    }
-
-    //todo: убрать i_quality
     @Override
     public String toString() {
-        return this.i_classid + "_" + this.i_instanceid + "_" + this.i_quality;
+        return this.i_classid + "_" + this.i_instanceid;
     }
 }
