@@ -22,11 +22,7 @@ public class FeedService {
     private final Connection connection;
 
     public FeedService() {
-        try {
             this.connection = DBUtils.createConnection();
-        } catch (SQLException ex) {
-            throw new RuntimeException("Can't create connection to FeedService db.\n" + ex.getMessage());
-        }
     }
 
     public int getFeedRowCount() throws SQLException {

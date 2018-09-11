@@ -43,14 +43,17 @@ public class NewItemGoListener {
                     }
                     arr[j++] = message.charAt(i);
 
-                    while (j < arr.length) {
-                        arr[j++] = ' ';
-                    }
-                    //Извлекли
 
-                    //todo написать обработку item
-                    System.out.println(new Gson().fromJson(message, Item.class));
                 }
+
+                while (j < arr.length) {
+                    arr[j++] = ' ';
+                }
+
+                //Извлекли
+                //todo написать обработку item
+//                System.out.println(new Gson().fromJson(message, Item.class));
+                System.out.println(new String(arr));
             }
         });
     }
