@@ -75,13 +75,51 @@ class DBUtils {
             //language=sql
             "CREATE INDEX key_consts_index ON CONSTS (const_key);";
 
+    private static final String CREATE_BUY_HISTORY =
+            //language=sql
+            "create table buy_history(\n" +
+                    "  id bigserial primary key,\n" +
+                    "  i_classid bigint,\n" +
+                    "  i_instanceid bigint,\n" +
+                    "  i_quality text,\n" +
+                    "  i_name_color varchar(6),\n" +
+                    "  i_market_hash_name text,\n" +
+                    "  stickers text,\n" +
+                    "  ui_price real,\n" +
+                    "  w_price real\n" +
+                    ");";
+
+    //Пример триггера todo повесить тириггер на таблицы для добавление записи без проверки на существование
+    private static final String INSERT_TRIGGER =
+            //language=sql
+            "CREATE FUNCTION foo_name() RETURNS trigger AS $foo_name$\n" +
+                    "BEGIN\n" +
+                    "\n" +
+                    "IF (exists(\n" +
+                    "\tselect 1 \n" +
+                    "\tfrom buy_history\n" +
+                    "\twhere )) \n" +
+                    "THEN\n" +
+                    "  update buy_history \n" +
+                    "  set  \n" +
+                    "  where ;\n" +
+                    "\treturn null;\n" +
+                    "END IF;\n" +
+                    "  \n" +
+                    "RETURN NEW;\n" +
+                    "END;\n" +
+                    "$foo_name$ LANGUAGE plpgsql;\n" +
+                    "CREATE TRIGGER check_history BEFORE INSERT ON t_name \n" +
+                    "FOR EACH ROW EXECUTE PROCEDURE foo_name();";
+
     //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
-    public void reset() throws SQLException {
+    public static void reset() throws SQLException {
         Connection connection = createConnection();
-        DBUtils.createFeedTable(connection);
-        DBUtils.createHistoryTable(connection);
-        DBUtils.createStatsTable(connection);
-        DBUtils.createConstsTable(connection);
+//        DBUtils.createFeedTable(connection);
+//        DBUtils.createHistoryTable(connection);
+//        DBUtils.createStatsTable(connection);
+//        DBUtils.createConstsTable(connection);
+        DBUtils.setCreateBuyHistoryTable(connection);
     }
 
     static void createFeedTable(Connection connection) throws SQLException {
@@ -111,6 +149,12 @@ class DBUtils {
         System.out.println("Consts table has been created successfully.");
     }
 
+    static void setCreateBuyHistoryTable(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(CREATE_BUY_HISTORY);
+        System.out.println("Buy_history table has been created successfully.");
+    }
+
     static void dropFeedTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(DROP_FEED_SQL);
@@ -127,13 +171,19 @@ class DBUtils {
         return resultSet.getRow();
     }
 
-    static Connection createConnection() throws SQLException {
-        Properties props = new Properties();
-        props.setProperty("user", DBUtils.CSDatabaseConfig.user);
-        props.setProperty("password", DBUtils.CSDatabaseConfig.password);
-        props.setProperty("ddl", DBUtils.CSDatabaseConfig.ddl);
-        Connection conn = DriverManager.getConnection(DBUtils.CSDatabaseConfig.url, props);
-        return conn;
+    static Connection createConnection() {
+        try {
+            Properties props = new Properties();
+            props.setProperty("user", DBUtils.CSDatabaseConfig.user);
+            props.setProperty("password", DBUtils.CSDatabaseConfig.password);
+            props.setProperty("ddl", DBUtils.CSDatabaseConfig.ddl);
+            Connection conn = DriverManager.getConnection(DBUtils.CSDatabaseConfig.url, props);
+            return conn;
+        } catch (SQLException e) {
+            //todo переписать
+            e.printStackTrace();
+            throw new RuntimeException("Ошибка подключения к базе данных\n");
+        }
     }
 
     private static class CSDatabaseConfig {

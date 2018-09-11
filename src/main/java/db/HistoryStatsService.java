@@ -15,11 +15,7 @@ public class HistoryStatsService {
     private final Connection connection;
 
     public HistoryStatsService() {
-        try {
             this.connection = DBUtils.createConnection();
-        } catch (SQLException ex) {
-            throw new RuntimeException("Can't create connection to FeedService db.\n" + ex.getMessage());
-        }
     }
 
     public List<PriceTime> getHistory(Long c_classid, Long c_instanceid) throws SQLException {

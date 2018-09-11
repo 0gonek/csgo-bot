@@ -12,11 +12,7 @@ public class ConstsService {
     private final Connection connection;
 
     public ConstsService() {
-        try {
             this.connection = DBUtils.createConnection();
-        } catch (SQLException ex) {
-            throw new RuntimeException("Can't create connection to FeedService db.\n" + ex.getMessage());
-        }
     }
 
     public void addConst(String key, Long longValue, String stringValue) throws SQLException {
