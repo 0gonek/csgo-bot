@@ -26,6 +26,9 @@ public class Worker {
 //                e.printStackTrace();
 //            }
 //
+//        BuyHistoryService buy = new BuyHistoryService();
+//        buy.insert(new Item("1111", "1111", "111111", "11111", "111111", "1111111", 8, 9 ));
+//        buy.closeConnection();
 //            nl.disconnect();
 //        Thread modeSetter = new Thread(new ModeSetter());
 //        modeSetter.start();
