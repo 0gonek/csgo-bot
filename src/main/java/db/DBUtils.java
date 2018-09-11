@@ -86,7 +86,8 @@ public class DBUtils {
                     "  i_market_hash_name text,\n" +
                     "  stickers text,\n" +
                     "  ui_price real,\n" +
-                    "  w_price real\n" +
+                    "  w_price real,\n" +
+                    "  curr_time bigint\n" +
                     ");";
 
     //Пример триггера todo повесить тириггер на таблицы для добавление записи без проверки на существование
