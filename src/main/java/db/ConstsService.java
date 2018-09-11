@@ -15,7 +15,7 @@ public class ConstsService {
         try {
             this.connection = DBUtils.createConnection();
         } catch (SQLException ex) {
-            throw new RuntimeException("Can't create connection to FeedService db.\n" + ex.getMessage());
+            throw new RuntimeException("Can't create connection to ConstsService db.\n" + ex.getMessage());
         }
     }
 

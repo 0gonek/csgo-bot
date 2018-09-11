@@ -3,7 +3,7 @@ package db;
 import java.sql.*;
 import java.util.Properties;
 
-class DBUtils {
+public class DBUtils {
 
     private static final String DROP_FEED_SQL =
             //language=sql
@@ -75,6 +75,11 @@ class DBUtils {
             //language=sql
             "CREATE INDEX key_consts_index ON CONSTS (const_key);";
 
+    private static final String CREATE_GOOD_PRICE_SQL =
+            //language=sql
+            "CREATE TABLE GOOD_PRICE( c_classid bigint, c_instanceid bigint, price bigint, update_time bigint, " +
+                    "PRIMARY KEY (c_classid, c_instanceid));";
+
     //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
     public void reset() throws SQLException {
         Connection connection = createConnection();
@@ -82,6 +87,7 @@ class DBUtils {
         DBUtils.createHistoryTable(connection);
         DBUtils.createStatsTable(connection);
         DBUtils.createConstsTable(connection);
+        DBUtils.createGoodPriceTable(connection);
     }
 
     static void createFeedTable(Connection connection) throws SQLException {
@@ -109,6 +115,12 @@ class DBUtils {
         statement.execute(CREATE_CONSTS_TABLE_SQL);
         statement.execute(CREATE_CONSTS_INDEX_SQL);
         System.out.println("Consts table has been created successfully.");
+    }
+
+    static void createGoodPriceTable(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(CREATE_GOOD_PRICE_SQL);
+        System.out.println("Good_price table has been created successfully.");
     }
 
     static void dropFeedTable(Connection connection) throws SQLException {

@@ -11,7 +11,7 @@ import java.net.URL;
 
 import static resources.Props.CSV_FILE;
 
-public class UpdateDB implements Runnable {
+public class UpdateDBService implements Runnable {
 
     private static String CURRENT_DB_HTTP = "https://market.csgo.com/itemdb/current_730.json";
     private static String DOWNLOAD_CSV = "https://market.csgo.com/itemdb/";
