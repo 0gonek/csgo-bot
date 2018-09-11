@@ -10,8 +10,8 @@ import java.sql.SQLException;
 
 public class Worker {
     public static void main(String[] args) throws SQLException {
-        FeedService feedService = new FeedService();
-        DBUtils dbUtils = new DBUtils();
+//        FeedService feedService = new FeedService();
+//        DBUtils dbUtils = new DBUtils();
 //        dbUtils.reset();
 //        feedService.dropFeedTable();
 //        feedService.uploadCsvToFeed();
@@ -20,16 +20,16 @@ public class Worker {
 //        Thread historySaver = new Thread(new HistorySaver());
 //        historySaver.start();
 
-        GoodPriceCashe.heatCashe();
-        try {
-            Thread.sleep(1000);
-        }
-        catch (InterruptedException ex){
-            ex.printStackTrace();
-        }
-
-        Thread modeSetter = new Thread(new ModeSetter());
-        modeSetter.start();
+//        GoodPriceCashe.heatCashe();
+//        try {
+//            Thread.sleep(1000);
+//        }
+//        catch (InterruptedException ex){
+//            ex.printStackTrace();
+//        }
+//
+//        Thread modeSetter = new Thread(new ModeSetter());
+//        modeSetter.start();
 //        feedService.reset();
 
 
