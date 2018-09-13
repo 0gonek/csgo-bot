@@ -40,6 +40,7 @@ public class Worker {
             ex.printStackTrace();
         }
         Thread modeSetter = new Thread(new ModeSetter());
+        modeSetter.setPriority(3);
         modeSetter.start();
 //        feedService.reset();
 //        BuyHistoryService buyHistoryService = new BuyHistoryService();
