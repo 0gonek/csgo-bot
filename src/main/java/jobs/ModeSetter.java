@@ -1,6 +1,5 @@
 package jobs;
 
-import cashe.GoodPriceCashe;
 import db.FeedService;
 import db.HistoryStatsService;
 import javafx.util.Pair;
@@ -8,7 +7,6 @@ import pojo.PriceTime;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
 
 public class ModeSetter implements Runnable {
 

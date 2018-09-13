@@ -14,11 +14,7 @@ public class GoodPriceService {
     private final Connection connection;
 
     public GoodPriceService() {
-        try {
             this.connection = DBUtils.createConnection();
-        } catch (SQLException ex) {
-            throw new RuntimeException("Can't create connection to GoodPriceService db.\n" + ex.getMessage());
-        }
     }
 
     public Map<Pair<Long, Long>, Long> getCasheFromTable() throws SQLException {

@@ -1,19 +1,17 @@
 package main;
 
-import db.BuyHistoryService;
-import pojo.Item;
-import cashe.GoodPriceCashe;
+import cashe.GoodPriceCasheService;
 import db.DBUtils;
 import db.FeedService;
 import jobs.ModeSetter;
-import websockets.NewItemGoListener;
+import jobs.PriceSetter;
 
 import java.sql.SQLException;
 
 public class Worker {
     public static void main(String[] args) throws SQLException {
-//        FeedService feedService = new FeedService();
-//        DBUtils dbUtils = new DBUtils();
+        FeedService feedService = new FeedService();
+        DBUtils dbUtils = new DBUtils();
 //        dbUtils.reset();
 //        feedService.dropFeedTable();
 //        feedService.uploadCsvToFeed();
@@ -34,9 +32,18 @@ public class Worker {
 //        buy.insert(new Item("1111", "1111", "111111", "11111", "111111", "1111111", 8, 9 ));
 //        buy.closeConnection();
 //            nl.disconnect();
-//        Thread modeSetter = new Thread(new ModeSetter());
-//        modeSetter.start();
+        GoodPriceCasheService.heatCashe();
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
+        Thread modeSetter = new Thread(new ModeSetter());
+        modeSetter.start();
 //        feedService.reset();
+//        BuyHistoryService buyHistoryService = new BuyHistoryService();
+
 
     }
 }

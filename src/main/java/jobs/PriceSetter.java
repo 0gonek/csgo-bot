@@ -1,9 +1,10 @@
 package jobs;
 
-import cashe.GoodPriceCashe;
+import cashe.GoodPriceCasheService;
 import db.GoodPriceService;
 import javafx.util.Pair;
 import pojo.PriceTime;
+import stratagy.TestStrategy;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,7 +18,7 @@ public class PriceSetter {
     }
 
     public Long getGoodPrice(List<PriceTime> history){
-        return history.get(history.size()-1).getL_price();
+        return TestStrategy.simple(history);
     }
 
     public void setGoodPrice(Pair<Long, Long> key, List<PriceTime> history) throws SQLException {
@@ -26,12 +27,12 @@ public class PriceSetter {
             goodPriceService.updatePrice(key, goodPrice);
         else
             goodPriceService.addPrice(key, goodPrice);
-        GoodPriceCashe.cash.put(key, goodPrice);
+        GoodPriceCasheService.getGoodPriceCash.put(key, goodPrice);
     }
 
     public void removeKey(Pair<Long, Long> key) throws SQLException {
         if(goodPriceService.contains(key))
             goodPriceService.deleteFromCashe(key);
-        GoodPriceCashe.cash.remove(key);
+        GoodPriceCasheService.getGoodPriceCash.remove(key);
     }
 }
