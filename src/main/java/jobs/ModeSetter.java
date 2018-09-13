@@ -42,17 +42,25 @@ public class ModeSetter implements Runnable {
 
     // Изменить мод у всех сущнностей в Feed
     private void setAllMods() throws SQLException {
-        List<Pair<Long, Long>> keys = feedService.getAllFeedKeys();
-        System.out.println("Mode setter found " + keys.size() + " keys. Start saving mods.");
-        int iteration = 0;
-        for (Pair<Long, Long> key :
-                keys) {
-            changeMode(key);
-            iteration++;
-            if (iteration % 1000 == 0)
-                System.out.println("Mode setter set row number " + iteration);
+        while (true) {
+            List<Pair<Long, Long>> keys = feedService.getAllFeedKeys();
+            System.out.println("Mode setter found " + keys.size() + " keys. Start saving mods.");
+            int iteration = 0;
+            for (Pair<Long, Long> key :
+                    keys) {
+                changeMode(key);
+                iteration++;
+                if (iteration % 1000 == 0)
+                    System.out.println("Mode setter set row number " + iteration);
+            }
+            System.out.println("All " + iteration + " mods have been set.");
+            try {
+                Thread.sleep(1000*60*5);    // 5 минут ждать между обновлениями
+            }
+            catch (InterruptedException ex){
+                ex.printStackTrace();
+            }
         }
-        System.out.println("All " + iteration + " mods have been set.");
     }
 
     public int changeMode(Pair<Long, Long> key) throws SQLException {
