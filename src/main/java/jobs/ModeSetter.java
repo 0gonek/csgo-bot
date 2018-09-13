@@ -53,9 +53,9 @@ public class ModeSetter implements Runnable {
                 if (iteration % 1000 == 0)
                     System.out.println("Mode setter set row number " + iteration);
             }
-            System.out.println("All " + iteration + " mods have been set.");
+            System.out.println("All " + iteration + " mods have been set. Sleep for 30 minutes.");
             try {
-                Thread.sleep(1000*60*5);    // 5 минут ждать между обновлениями
+                Thread.sleep(1000*60*30);    // 30 минут ждать между обновлениями
             }
             catch (InterruptedException ex){
                 ex.printStackTrace();
