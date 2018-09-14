@@ -29,7 +29,8 @@ public class DBUtils {
                     "\tc_name_color varchar(6),\n" +
                     "\tc_price_updated integer,\n" +
                     "\tc_pop integer,\n" +
-                    "\tc_base_id integer\n" +
+                    "\tc_base_id integer,\n" +
+                    "\taverage_price integer default 0;\n" +
                     ");";
 
     private static final String CREATE_HISTORY_SQL =
@@ -127,6 +128,7 @@ public class DBUtils {
         DBUtils.createConstsTable(connection);
         DBUtils.createGoodPriceTable(connection);
 //        DBUtils.setCreateBuyHistoryTable(connection);
+        connection.close();
     }
 
     static void createFeedTable(Connection connection) throws SQLException {
@@ -198,6 +200,9 @@ public class DBUtils {
             throw new RuntimeException("Ошибка подключения к базе данных\n");
         }
     }
+
+
+
 
     private static class CSDatabaseConfig {
         private static final String url = "jdbc:postgresql://localhost:5432/cs";

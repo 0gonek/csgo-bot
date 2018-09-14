@@ -11,15 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FeedService {
+    private static final String TABLE_FEED = "feed";
+    private static final String TABLE_NEW_FEED = "new_feed";
 
     private static final String CSV_TO_FEED =
             //language=sql
-            "COPY FEED(c_classid,c_instanceid,c_price,c_offers,c_popularity,c_rarity," +
+             "COPY FEED(c_classid,c_instanceid,c_price,c_offers,c_popularity,c_rarity," +
                     "c_quality,c_heroid,c_slot,c_stickers,c_market_name,c_market_name_en," +
                     "c_market_hash_name,c_name_color,c_price_updated,c_pop,c_base_id) \n" +
                     "FROM '" + Props.CSV_FILE + "' WITH  DELIMITER ';' CSV HEADER";
 
-    private final Connection connection;
+    private Connection connection;
 
     public FeedService() {
             this.connection = DBUtils.createConnection();
@@ -29,6 +31,7 @@ public class FeedService {
         return DBUtils.getFeedRowCount(connection);
     }
 
+    //table = new_feed | feed
     public void uploadCsvToFeed() throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(CSV_TO_FEED);
@@ -57,6 +60,13 @@ public class FeedService {
                         "SET mode = " + mode +
                         "WHERE c_classid = " + c_classid + " AND c_instanceid =" + c_instanceid + ";";
         statement.executeUpdate(query);
+    }
+
+    public void createConnection() throws SQLException{
+        this.connection = DBUtils.createConnection();
+    }
+    public void closeConnection() throws SQLException {
+        this.connection.close();
     }
 
 }
