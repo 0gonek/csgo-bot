@@ -29,7 +29,8 @@ public class DBUtils {
                     "\tc_name_color varchar(6),\n" +
                     "\tc_price_updated integer,\n" +
                     "\tc_pop integer,\n" +
-                    "\tc_base_id integer\n" +
+                    "\tc_base_id integer,\n" +
+                    "\taverage_price integer default 0;\n" +
                     ");";
 
     private static final String CREATE_HISTORY_SQL =
@@ -121,12 +122,13 @@ public class DBUtils {
     //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
     public static void reset() throws SQLException {
         Connection connection = createConnection();
-        DBUtils.createFeedTable(connection);
-        DBUtils.createHistoryTable(connection);
-        DBUtils.createStatsTable(connection);
+//        DBUtils.createFeedTable(connection);
+//        DBUtils.createHistoryTable(connection);
+//        DBUtils.createStatsTable(connection);
         DBUtils.createConstsTable(connection);
         DBUtils.createGoodPriceTable(connection);
-        DBUtils.setCreateBuyHistoryTable(connection);
+//        DBUtils.setCreateBuyHistoryTable(connection);
+        connection.close();
     }
 
     static void createFeedTable(Connection connection) throws SQLException {
@@ -198,6 +200,9 @@ public class DBUtils {
             throw new RuntimeException("Ошибка подключения к базе данных\n");
         }
     }
+
+
+
 
     private static class CSDatabaseConfig {
         private static final String url = "jdbc:postgresql://localhost:5432/cs";

@@ -97,7 +97,7 @@ public class HistorySaver implements Runnable {
                 ex.printStackTrace();
             }
             globalIteration++;
-            System.out.println("Global iteration " + globalIteration + " of story saving have been done.");
+         //   System.out.println("Global iteration " + globalIteration + " of story saving have been done.");
         }
     }
 
