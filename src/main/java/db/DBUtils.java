@@ -121,12 +121,12 @@ public class DBUtils {
     //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
     public static void reset() throws SQLException {
         Connection connection = createConnection();
-        DBUtils.createFeedTable(connection);
-        DBUtils.createHistoryTable(connection);
-        DBUtils.createStatsTable(connection);
+//        DBUtils.createFeedTable(connection);
+//        DBUtils.createHistoryTable(connection);
+//        DBUtils.createStatsTable(connection);
         DBUtils.createConstsTable(connection);
         DBUtils.createGoodPriceTable(connection);
-        DBUtils.setCreateBuyHistoryTable(connection);
+//        DBUtils.setCreateBuyHistoryTable(connection);
     }
 
     static void createFeedTable(Connection connection) throws SQLException {

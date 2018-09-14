@@ -5,10 +5,13 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
+import db.BuyHistoryService;
 import pojo.Item;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import static cashe.GoodPriceCasheService.getGoodPriceCash;
 import static resources.Props.WSS;
 
 public class NewItemGoListener {
@@ -49,11 +52,25 @@ public class NewItemGoListener {
                 while (j < arr.length) {
                     arr[j++] = ' ';
                 }
-
                 //Извлекли
-                //todo написать обработку item
-//                System.out.println(new Gson().fromJson(message, Item.class));
-                System.out.println(new String(arr));
+
+                //Проверяем в кэше котим ли мы покупать этот предмет
+                Item item = new Gson().fromJson(new String(arr),Item.class);
+                Long cashPrice = getGoodPriceCash.get(item.getPair());
+                item.setW_price((double) cashPrice);
+                if (item.getW_price() >= item.getUi_price()) {
+                    try {
+                        BuyHistoryService buy = new BuyHistoryService();
+                        buy.insert(item);
+                        buy.closeConnection();
+                        System.out.println(item + "хорошая цена");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    System.out.println(item + "плохая цена");
+                }
             }
         });
     }

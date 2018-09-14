@@ -1,5 +1,7 @@
 package pojo;
 
+import javafx.util.Pair;
+
 public class Item {
     private String i_classid;
     private String i_instanceid;
@@ -98,6 +100,10 @@ public class Item {
 
     @Override
     public String toString() {
-        return this.i_classid + "_" + this.i_instanceid;
+        return "_class_" + this.i_classid + "_instance_" + this.i_instanceid + "_w_" + this.w_price + "_ui_" + this.ui_price;
+    }
+
+    public Pair<Long, Long> getPair() {
+        return new Pair<Long, Long>(Long.parseLong(this.i_classid), Long.parseLong(this.i_instanceid));
     }
 }
