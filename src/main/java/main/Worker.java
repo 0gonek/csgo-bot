@@ -1,6 +1,7 @@
 package main;
 
 import cashe.GoodPriceCasheService;
+import db.UpdateDBService;
 import jobs.HistorySaver;
 import jobs.ModeSetter;
 import jobs.Pinger;
@@ -11,32 +12,35 @@ import java.sql.SQLException;
 public class Worker {
     public static void main(String[] args) throws SQLException {
 
+        Thread updateFeed = new Thread(new UpdateDBService());
+        updateFeed.setPriority(2);
+        updateFeed.start();
 
-        GoodPriceCasheService.heatCashe();  //  Подгрузка кеша из базы
-        System.out.println("Cashe size = " + GoodPriceCasheService.getGoodPriceCash.size());
-
-        Thread historySaver = new Thread(new HistorySaver());   //  Запуск джобы, обновляющей историю по фиду
-        historySaver.setPriority(3);
-        historySaver.start();
-
-        Thread modeSetter = new Thread(new ModeSetter());   //  Запуск джобы, обновляющей рекомендованные цены и моды
-        modeSetter.setPriority(5);
-        modeSetter.start();
-
-        Thread pingSender = new Thread(new Pinger());
-        pingSender.start();
-
-        NewItemGoListener nl = new NewItemGoListener();
-        nl.connect();
-
-        try {
-            Thread.sleep(1000 * 60 * 60);
-        } catch (InterruptedException e ) {
-            e.printStackTrace();
-        }
-        nl.disconnect();
-
-        System.exit(0);
+//        GoodPriceCasheService.heatCashe();  //  Подгрузка кеша из базы
+//        System.out.println("Cashe size = " + GoodPriceCasheService.getGoodPriceCash.size());
+//
+//        Thread historySaver = new Thread(new HistorySaver());   //  Запуск джобы, обновляющей историю по фиду
+//        historySaver.setPriority(3);
+//        historySaver.start();
+//
+//        Thread modeSetter = new Thread(new ModeSetter());   //  Запуск джобы, обновляющей рекомендованные цены и моды
+//        modeSetter.setPriority(5);
+//        modeSetter.start();
+//
+//        Thread pingSender = new Thread(new Pinger());
+//        pingSender.start();
+//
+//        NewItemGoListener nl = new NewItemGoListener();
+//        nl.connect();
+//
+//        try {
+//            Thread.sleep(1000 * 60 * 60);
+//        } catch (InterruptedException e ) {
+//            e.printStackTrace();
+//        }
+//        nl.disconnect();
+//
+//        System.exit(0);
 
 //
 //        BuyHistoryService buy = new BuyHistoryService();

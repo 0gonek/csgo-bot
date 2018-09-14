@@ -21,7 +21,7 @@ public class UpdateDBService implements Runnable {
 
     private NewFeedService newFeedService;
 
-    UpdateDBService() {
+    public UpdateDBService() {
         this.newFeedService = new NewFeedService();
     }
 

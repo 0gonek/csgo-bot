@@ -23,11 +23,8 @@ public class Buyer implements Runnable {
             if (message.charAt(i) == '\\' && (message.charAt(i + 1) == '\\' || message.charAt(i + 1) == '\"')) {
                 continue;
             } else {
-
+                arr[j++] = message.charAt(i);
             }
-            arr[j++] = message.charAt(i);
-
-
         }
 
         while (j < arr.length) {
@@ -43,7 +40,7 @@ public class Buyer implements Runnable {
             return;
         }
         item.setW_price((double) cashPrice);
-        item.setUi_price(item.getUi_price()*100);
+        item.setUi_price(item.getUi_price() * 100);
 
         if (item.getW_price() >= item.getUi_price()) {
             BuyHistoryService buy = new BuyHistoryService();
