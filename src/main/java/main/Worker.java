@@ -1,7 +1,6 @@
 package main;
 
 import cashe.GoodPriceCasheService;
-import db.DBUtils;
 import jobs.HistorySaver;
 import jobs.ModeSetter;
 import websockets.NewItemGoListener;
@@ -27,13 +26,15 @@ public class Worker {
 
         NewItemGoListener nl = new NewItemGoListener();
         nl.connect();
-        System.out.println("NewItemGoListener was connected");
+
         try {
             Thread.sleep(1000 * 60 * 60);
         } catch (InterruptedException e ) {
             e.printStackTrace();
         }
         nl.disconnect();
+
+        System.exit(0);
 
 //
 //        BuyHistoryService buy = new BuyHistoryService();

@@ -2,11 +2,8 @@ package jobs;
 
 import com.google.gson.Gson;
 import db.BuyHistoryService;
-import db.FeedService;
 import pojo.Item;
 import websockets.NewItemGoListener;
-
-import java.sql.SQLException;
 
 import static cashe.GoodPriceCasheService.getGoodPriceCash;
 
@@ -45,7 +42,8 @@ public class Buyer implements Runnable {
             NewItemGoListener.countOfThreads.decrementAndGet();
             return;
         }
-        item.setW_price((double) cashPrice*100);
+        item.setW_price((double) cashPrice);
+        item.setUi_price(item.getUi_price()*100);
 
         if (item.getW_price() >= item.getUi_price()) {
             BuyHistoryService buy = new BuyHistoryService();

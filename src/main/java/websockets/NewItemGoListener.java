@@ -1,19 +1,12 @@
 package websockets;
 
-import com.google.gson.Gson;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
-import db.BuyHistoryService;
 import jobs.Buyer;
-import pojo.Item;
-
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static cashe.GoodPriceCasheService.getGoodPriceCash;
 import static resources.Props.WSS;
 
 public class NewItemGoListener {
@@ -52,14 +45,16 @@ public class NewItemGoListener {
             newItemGo.setPingInterval(40 * 1000);
             newItemGo.connect();
             newItemGo.sendText("newitems_go");
-
+            System.out.println("NewItemGoListener was connected");
         } catch (WebSocketException e) {
             //todo переписать
             e.printStackTrace();
+            throw new RuntimeException("Не удалось установить соединение с сокетом");
         }
     }
 
     public void disconnect() {
+        System.out.println("NewItemGoListener was disconnected");
         newItemGo.disconnect();
     }
 
