@@ -29,11 +29,12 @@ public class Worker {
         nl.connect();
         System.out.println("NewItemGoListener was connected");
         try {
-            Thread.sleep(1000 * 60 * 10);
+            Thread.sleep(1000 * 60 * 60);
         } catch (InterruptedException e ) {
             e.printStackTrace();
         }
         nl.disconnect();
+
 //
 //        BuyHistoryService buy = new BuyHistoryService();
 //        buy.insert(new Item("1111", "1111", "111111", "11111", "111111", "1111111", 8, 9 ));

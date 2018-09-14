@@ -9,8 +9,7 @@ import java.sql.Statement;
 public class BuyHistoryService {
     private final Connection connection;
 
-    public BuyHistoryService() throws SQLException {
-        DBUtils.reset();
+    public BuyHistoryService() {
         this.connection = DBUtils.createConnection();
 
     }

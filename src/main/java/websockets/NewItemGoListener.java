@@ -6,16 +6,18 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import db.BuyHistoryService;
+import jobs.Buyer;
 import pojo.Item;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static cashe.GoodPriceCasheService.getGoodPriceCash;
 import static resources.Props.WSS;
 
 public class NewItemGoListener {
-
+    public static AtomicInteger countOfThreads = new AtomicInteger(0);
     private WebSocket newItemGo;
 
     public NewItemGoListener() {
@@ -34,43 +36,13 @@ public class NewItemGoListener {
         newItemGo.addListener(new WebSocketAdapter() {
             @Override
             public void onTextMessage(WebSocket webSocket, String message) {
+                if (countOfThreads.get() > 250) return;
 
-                //Извлечение json из поля data
-                char[] arr = new char[message.length() - 32]; //30 число символов до нужной { + 2 лишние символа в конце
-                int j = 0;
-                for (int i = 30; i < message.length() - 2; ++i) {
-                    if (message.charAt(i) == '\\' && (message.charAt(i + 1) == '\\' || message.charAt(i + 1) == '\"')) {
-                        continue;
-                    } else {
+                countOfThreads.incrementAndGet();
+                Thread th = new Thread(new Buyer(message));
+                th.setPriority(6);
+                th.start();
 
-                    }
-                    arr[j++] = message.charAt(i);
-
-
-                }
-
-                while (j < arr.length) {
-                    arr[j++] = ' ';
-                }
-                //Извлекли
-
-                //Проверяем в кэше котим ли мы покупать этот предмет
-                Item item = new Gson().fromJson(new String(arr),Item.class);
-                Long cashPrice = getGoodPriceCash.get(item.getPair());
-                item.setW_price((double) cashPrice);
-                if (item.getW_price() >= item.getUi_price()) {
-                    try {
-                        BuyHistoryService buy = new BuyHistoryService();
-                        buy.insert(item);
-                        buy.closeConnection();
-                        System.out.println(item + "хорошая цена");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    System.out.println(item + "плохая цена");
-                }
             }
         });
     }

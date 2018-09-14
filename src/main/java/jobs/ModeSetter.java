@@ -12,7 +12,7 @@ public class ModeSetter implements Runnable {
 
     private static final int MIN_VALID_HISTORY_SIZE = 500;  // <= 500
     private static final long MIN_VALID_HISTORY_OLD = 0;
-    private static final long MAX_VALID_HISTORY_OLD = 3888000000L; // 1 Month in milliseconds.
+    private static final long MAX_VALID_HISTORY_OLD = 3888000000L * 3L; // 3 Month in milliseconds.
     private static final long MIN_VALID_AV_PRICE = 500; // 5 рублей
     private static final long MAX_VALID_AV_PRICE = 100000;  // 1000 рублей
 
