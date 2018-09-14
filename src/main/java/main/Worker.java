@@ -3,6 +3,7 @@ package main;
 import cashe.GoodPriceCasheService;
 import jobs.HistorySaver;
 import jobs.ModeSetter;
+import jobs.Pinger;
 import websockets.NewItemGoListener;
 
 import java.sql.SQLException;
@@ -14,7 +15,6 @@ public class Worker {
         GoodPriceCasheService.heatCashe();  //  Подгрузка кеша из базы
         System.out.println("Cashe size = " + GoodPriceCasheService.getGoodPriceCash.size());
 
-
         Thread historySaver = new Thread(new HistorySaver());   //  Запуск джобы, обновляющей историю по фиду
         historySaver.setPriority(3);
         historySaver.start();
@@ -23,6 +23,8 @@ public class Worker {
         modeSetter.setPriority(5);
         modeSetter.start();
 
+        Thread pingSender = new Thread(new Pinger());
+        pingSender.start();
 
         NewItemGoListener nl = new NewItemGoListener();
         nl.connect();

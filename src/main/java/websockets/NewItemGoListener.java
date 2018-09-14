@@ -42,7 +42,7 @@ public class NewItemGoListener {
 
     public void connect() {
         try {
-            newItemGo.setPingInterval(40 * 1000);
+            newItemGo.setPingInterval(1000);
             newItemGo.connect();
             newItemGo.sendText("newitems_go");
             System.out.println("NewItemGoListener was connected");
