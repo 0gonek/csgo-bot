@@ -49,9 +49,9 @@ public class PriceSetter {
         //
 
         Long goodPrice1 = getGoodPrice1(history);
-        Long goodPrice2 = getGoodPrice1(history);
-        Long goodPrice3 = getGoodPrice1(history);
-        Long goodPrice4 = getGoodPrice1(history);
+        Long goodPrice2 = getGoodPrice2(history);
+        Long goodPrice3 = getGoodPrice3(history);
+        Long goodPrice4 = getGoodPrice4(history);
 
         GoodPriceCasheService.getGoodPriceCash1.put(key, goodPrice1);
         GoodPriceCasheService.getGoodPriceCash2.put(key, goodPrice2);
