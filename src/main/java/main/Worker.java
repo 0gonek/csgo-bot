@@ -28,7 +28,7 @@ public class Worker {
         modeSetter.start();
 
         try {
-            Thread.sleep(1000 * 60 * 12); // 12 минут на заполнить кеши
+            Thread.sleep(1000 * 60 * 5); // 7 минут на заполнить кеши хоть немного
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }

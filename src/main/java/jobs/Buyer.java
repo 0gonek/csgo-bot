@@ -50,7 +50,7 @@ public class Buyer implements Runnable {
 //            System.out.println(item + " - куплен!");
 //        }
 
-        Long cashPrice1 = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+        Long cashPrice1 = GoodPriceCasheService.getGoodPriceCash1.get(item.getPair());
         if (cashPrice1 != null && cashPrice1 >= item.getUi_price() * 100) {
             BuyHistoryService buy = new BuyHistoryService();
             Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
@@ -60,7 +60,7 @@ public class Buyer implements Runnable {
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 1.");
         }
-        Long cashPrice2 = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+        Long cashPrice2 = GoodPriceCasheService.getGoodPriceCash2.get(item.getPair());
         if (cashPrice2 != null && cashPrice2 >= item.getUi_price() * 100) {
             BuyHistoryService buy = new BuyHistoryService();
             Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
@@ -70,7 +70,7 @@ public class Buyer implements Runnable {
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 2.");
         }
-        Long cashPrice3 = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+        Long cashPrice3 = GoodPriceCasheService.getGoodPriceCash3.get(item.getPair());
         if (cashPrice3 != null && cashPrice3 >= item.getUi_price() * 100) {
             BuyHistoryService buy = new BuyHistoryService();
             Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
@@ -80,7 +80,7 @@ public class Buyer implements Runnable {
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 3.");
         }
-        Long cashPrice4 = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+        Long cashPrice4 = GoodPriceCasheService.getGoodPriceCash4.get(item.getPair());
         if (cashPrice4 != null && cashPrice4 >= item.getUi_price() * 100) {
             BuyHistoryService buy = new BuyHistoryService();
             Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
@@ -90,8 +90,6 @@ public class Buyer implements Runnable {
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 4.");
         }
-
-        System.out.println("Price = " + item.getUi_price() * 100 + ", cashe good price = " + cashPrice1);
 
         NewItemGoListener.countOfThreads.decrementAndGet();
     }
