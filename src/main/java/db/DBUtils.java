@@ -89,6 +89,7 @@ public class DBUtils {
                     "  ui_price real,\n" +
                     "  w_price real,\n" +
                     "  curr_time bigint\n" +
+                    "  mode integer\n" +
                     ");";
 
     //Пример триггера todo повесить тириггер на таблицы для добавление записи без проверки на существование
@@ -200,8 +201,6 @@ public class DBUtils {
             throw new RuntimeException("Ошибка подключения к базе данных\n");
         }
     }
-
-
 
 
     private static class CSDatabaseConfig {

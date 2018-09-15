@@ -35,7 +35,7 @@ public class NewFeedService {
             "drop table new_feed;";
 
     private static final String CSV_TO_NEW_FEED =
-    //language=sql
+            //language=sql
             "copy new_feed(c_classid,c_instanceid,c_price,c_offers,c_popularity,c_rarity," +
                     "c_quality,c_heroid,c_slot,c_stickers,c_market_name,c_market_name_en," +
                     "c_market_hash_name,c_name_color,c_price_updated,c_pop,c_base_id) \n" +
@@ -50,15 +50,16 @@ public class NewFeedService {
     private Connection connection;
 
 
-    public NewFeedService() {}
+    public NewFeedService() {
+    }
 
-    public void uploadCsvToNewFeed() throws SQLException{
+    public void uploadCsvToNewFeed() throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(CSV_TO_NEW_FEED);
         System.out.println("CSV uploaded to new_feed successfully.");
     }
 
-    public void createConnection(){
+    public void createConnection() {
         this.connection = DBUtils.createConnection();
     }
 
@@ -69,19 +70,19 @@ public class NewFeedService {
     void createNewFeed() throws SQLException {
         Statement statement = this.connection.createStatement();
         statement.execute(CREATE_NEW_FEED);
-        System.out.println("Good_price table has been created successfully.");
+        System.out.println("New_feed table has been created successfully.");
     }
 
     void dropNewFeed() throws SQLException {
         Statement statement = this.connection.createStatement();
         statement.execute(DROP_NEW_FEED);
-        System.out.println("Good_price table has been created successfully.");
+        System.out.println("New_feed table has been droped successfully.");
     }
 
     void mergeWithFeed() throws SQLException {
         Statement statement = this.connection.createStatement();
         statement.execute(MERGE_WITH_FEED);
-        System.out.println("Table new_feed was merged with feed");
+        System.out.println("Table new_feed was merged with feed.");
     }
 }
 

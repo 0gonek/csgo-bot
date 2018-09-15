@@ -16,7 +16,7 @@ public class FeedService {
 
     private static final String CSV_TO_FEED =
             //language=sql
-             "COPY FEED(c_classid,c_instanceid,c_price,c_offers,c_popularity,c_rarity," +
+            "COPY FEED(c_classid,c_instanceid,c_price,c_offers,c_popularity,c_rarity," +
                     "c_quality,c_heroid,c_slot,c_stickers,c_market_name,c_market_name_en," +
                     "c_market_hash_name,c_name_color,c_price_updated,c_pop,c_base_id) \n" +
                     "FROM '" + Props.CSV_FILE + "' WITH  DELIMITER ';' CSV HEADER";
@@ -24,7 +24,7 @@ public class FeedService {
     private Connection connection;
 
     public FeedService() {
-            this.connection = DBUtils.createConnection();
+        this.connection = DBUtils.createConnection();
     }
 
     public int getFeedRowCount() throws SQLException {
@@ -52,19 +52,20 @@ public class FeedService {
         return keys;
     }
 
-    public void setUpModeOnDB(Long c_classid, Long c_instanceid, int mode) throws SQLException {
+    public void setUpModeOnDB(Long c_classid, Long c_instanceid, int mode, Long averagePrice) throws SQLException {
         Statement statement = connection.createStatement();
         String query =
                 //language=sql
                 "UPDATE feed \n" +
-                        "SET mode = " + mode +
-                        "WHERE c_classid = " + c_classid + " AND c_instanceid =" + c_instanceid + ";";
+                        "SET mode = " + mode + ", average_price = " + averagePrice +
+                        " WHERE c_classid = " + c_classid + " AND c_instanceid =" + c_instanceid + ";";
         statement.executeUpdate(query);
     }
 
-    public void createConnection() throws SQLException{
+    public void createConnection() throws SQLException {
         this.connection = DBUtils.createConnection();
     }
+
     public void closeConnection() throws SQLException {
         this.connection.close();
     }

@@ -11,19 +11,17 @@ public class TestStrategy {
         return 1000000; // 1000 в копейках
     }
 
-    public static long simple(List<PriceTime> history) {
+    public static long simple(List<PriceTime> history, double finalCoef) {
         double av = 0L;
         for (int i = 0; i < history.size(); i++) {
             av += history.get(i).getL_price();
         }
         av /= history.size();
 
-        double finalCoef = 0.85;
-
         return (long) (av * finalCoef);
     }
 
-    public static long getNonDecreasing(List<PriceTime> history) {
+    public static long getNonDecreasing(List<PriceTime> history, double finalCoef) {
         double av1 = 0L;
         double av2 = 0L;
         double av = 0L;
@@ -68,8 +66,6 @@ public class TestStrategy {
         }
 
         goodPrice = goodPrice / sumWeigth;
-
-        Double finalCoef = 0.9;
 
         return (long)(finalCoef * Math.min(av, goodPrice));
     }

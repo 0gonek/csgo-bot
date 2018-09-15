@@ -14,10 +14,10 @@ public class BuyHistoryService {
 
     }
 
-    public void insert(Item item) {
+    public void insert(Item item, int mode) {
         try {
             Statement statement = connection.createStatement();
-            statement.executeUpdate(item.toSQLInsert());
+            statement.executeUpdate(item.toSQLInsert(mode));
             statement.close();
         } catch (SQLException e) {
             //todo переписать

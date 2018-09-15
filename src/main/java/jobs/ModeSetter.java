@@ -55,9 +55,8 @@ public class ModeSetter implements Runnable {
             }
             System.out.println("All " + iteration + " mods have been set. Sleep for 30 minutes.");
             try {
-                Thread.sleep(1000*60*30);    // 30 минут ждать между обновлениями
-            }
-            catch (InterruptedException ex){
+                Thread.sleep(1000 * 60 * 30);    // 30 минут ждать между обновлениями
+            } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }
@@ -65,19 +64,19 @@ public class ModeSetter implements Runnable {
 
     public int changeMode(Pair<Long, Long> key) throws SQLException {
         if (key == null) {
-            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 9);
+            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 9, null);
             priceSetter.removeKey(key);
             return 9;
         }
 
         List<PriceTime> history = historyStatsService.getHistory(key.getKey(), key.getValue());
         if (history == null) {
-            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 8);
+            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 8, null);
             priceSetter.removeKey(key);
             return 8;
         }
         if (history.size() < MIN_VALID_HISTORY_SIZE) {
-            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 7);
+            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 7, null);
             priceSetter.removeKey(key);
             return 7;
         }
@@ -101,24 +100,25 @@ public class ModeSetter implements Runnable {
         }
         avPrice /= history.size();
 
+
         if (System.currentTimeMillis() - firstSell * 1000 > MAX_VALID_HISTORY_OLD) {
-            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 6);
+            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 6, avPrice);
             priceSetter.removeKey(key);
             return 6;
         }
         if (avPrice > MAX_VALID_AV_PRICE) {
-            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 5);
+            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 5, avPrice);
             priceSetter.removeKey(key);
             return 5;
         }
         if (avPrice < MIN_VALID_AV_PRICE) {
-            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 4);
+            feedService.setUpModeOnDB(key.getKey(), key.getValue(), 4, avPrice);
             priceSetter.removeKey(key);
             return 4;
         }
 
         // Хотим покупать
-        feedService.setUpModeOnDB(key.getKey(), key.getValue(), 1);
+        feedService.setUpModeOnDB(key.getKey(), key.getValue(), 1, avPrice);
         priceSetter.setGoodPrice(key, history);
         return 1;
     }

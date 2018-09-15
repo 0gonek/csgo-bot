@@ -1,11 +1,11 @@
 package jobs;
 
+import cashe.GoodPriceCasheService;
 import com.google.gson.Gson;
 import db.BuyHistoryService;
 import pojo.Item;
 import websockets.NewItemGoListener;
 
-import static cashe.GoodPriceCasheService.getGoodPriceCash;
 
 public class Buyer implements Runnable {
 
@@ -34,21 +34,61 @@ public class Buyer implements Runnable {
 
         //Проверяем в кэше котим ли мы покупать этот предмет
         Item item = new Gson().fromJson(new String(arr), Item.class);
-        Long cashPrice = getGoodPriceCash.get(item.getPair());
-        if (cashPrice == null) {
-            NewItemGoListener.countOfThreads.decrementAndGet();
-            return;
-        }
-        item.setW_price((double) cashPrice);
-        item.setUi_price(item.getUi_price() * 100);
 
-        if (item.getW_price() >= item.getUi_price()) {
+//        Long cashPrice = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+//        if (cashPrice == null) {
+//            NewItemGoListener.countOfThreads.decrementAndGet();
+//            return;
+//        }
+//        item.setW_price((double) cashPrice);
+//        item.setUi_price(item.getUi_price() * 100);
+//
+//        if (item.getW_price() >= item.getUi_price()) {
+//            BuyHistoryService buy = new BuyHistoryService();
+//            buy.insert(item, 0);
+//            buy.closeConnection();
+//            System.out.println(item + " - куплен!");
+//        }
+
+        Long cashPrice1 = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+        if (cashPrice1 != null && cashPrice1 >= item.getUi_price() * 100) {
             BuyHistoryService buy = new BuyHistoryService();
-            buy.insert(item);
+            Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
+                    item.getI_name_color(), item.getI_market_hash_name(), item.getStickers(),
+                    item.getUi_price() * 100, cashPrice1);
+            buy.insert(item, 1);
             buy.closeConnection();
-            System.out.println(item + " - хорошая цена");
-        } else {
-            System.out.println(item + " - плохая цена");
+            System.out.println(item + " - куплен - mode = 1.");
+        }
+        Long cashPrice2 = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+        if (cashPrice2 != null && cashPrice2 >= item.getUi_price() * 100) {
+            BuyHistoryService buy = new BuyHistoryService();
+            Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
+                    item.getI_name_color(), item.getI_market_hash_name(), item.getStickers(),
+                    item.getUi_price() * 100, cashPrice2);
+            buy.insert(item, 2);
+            buy.closeConnection();
+            System.out.println(item + " - куплен - mode = 2.");
+        }
+        Long cashPrice3 = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+        if (cashPrice3 != null && cashPrice3 >= item.getUi_price() * 100) {
+            BuyHistoryService buy = new BuyHistoryService();
+            Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
+                    item.getI_name_color(), item.getI_market_hash_name(), item.getStickers(),
+                    item.getUi_price() * 100, cashPrice3);
+            buy.insert(item, 3);
+            buy.closeConnection();
+            System.out.println(item + " - куплен - mode = 3.");
+        }
+        Long cashPrice4 = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
+        if (cashPrice4 != null && cashPrice4 >= item.getUi_price() * 100) {
+            BuyHistoryService buy = new BuyHistoryService();
+            Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
+                    item.getI_name_color(), item.getI_market_hash_name(), item.getStickers(),
+                    item.getUi_price() * 100, cashPrice4);
+            buy.insert(item, 4);
+            buy.closeConnection();
+            System.out.println(item + " - куплен - mode = 4.");
         }
 
         NewItemGoListener.countOfThreads.decrementAndGet();

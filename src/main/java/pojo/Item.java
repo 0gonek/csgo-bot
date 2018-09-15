@@ -15,7 +15,16 @@ public class Item {
 
     public Item(){}
 
-    public Item(String i_classid, String i_instanceid, String i_quality, String i_name_color, String i_market_hash_name, String stickers, double ui_price, double w_price) {
+    public Item(
+            String i_classid,
+            String i_instanceid,
+            String i_quality,
+            String i_name_color,
+            String i_market_hash_name,
+            String stickers,
+            double ui_price,
+            double w_price
+    ) {
         this.i_classid = i_classid;
         this.i_instanceid = i_instanceid;
         this.i_quality = i_quality;
@@ -90,12 +99,14 @@ public class Item {
         this.w_price = w_price;
     }
 
-    public String toSQLInsert() {
+    public String toSQLInsert(int mode) {
         return
                 //language=sql
-                "insert into buy_history (i_classid, i_instanceid, i_quality, i_name_color, i_market_hash_name, stickers, ui_price, w_price, curr_time)\n" +
-                        "values (" + this.i_classid + "," + this.i_instanceid + ",'" + this.i_quality + "','" + this.i_name_color +
-                        "','" + this.i_market_hash_name + "','" + this.stickers + "'," + this.ui_price + "," + this.w_price + "," + System.currentTimeMillis() + ");";
+                "insert into buy_history (i_classid, i_instanceid, i_quality, i_name_color, i_market_hash_name," +
+                        "stickers, ui_price, w_price, curr_time, mode)\n" +
+                        "values (" + this.i_classid + "," + this.i_instanceid + ",'" + this.i_quality + "','" +
+                        this.i_name_color + "','" + this.i_market_hash_name + "','" + this.stickers + "'," +
+                        this.ui_price + "," + this.w_price + "," + System.currentTimeMillis() + "," + mode + ");";
     }
 
     @Override
