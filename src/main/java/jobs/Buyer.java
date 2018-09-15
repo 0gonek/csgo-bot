@@ -56,7 +56,7 @@ public class Buyer implements Runnable {
             Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
                     item.getI_name_color(), item.getI_market_hash_name(), item.getStickers(),
                     item.getUi_price() * 100, cashPrice1);
-            buy.insert(item, 1);
+            buy.insert(copy, 1);
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 1.");
         }
@@ -66,7 +66,7 @@ public class Buyer implements Runnable {
             Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
                     item.getI_name_color(), item.getI_market_hash_name(), item.getStickers(),
                     item.getUi_price() * 100, cashPrice2);
-            buy.insert(item, 2);
+            buy.insert(copy, 2);
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 2.");
         }
@@ -76,7 +76,7 @@ public class Buyer implements Runnable {
             Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
                     item.getI_name_color(), item.getI_market_hash_name(), item.getStickers(),
                     item.getUi_price() * 100, cashPrice3);
-            buy.insert(item, 3);
+            buy.insert(copy, 3);
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 3.");
         }
@@ -86,10 +86,12 @@ public class Buyer implements Runnable {
             Item copy = new Item(item.getI_classid(), item.getI_instanceid(), item.getI_quality(),
                     item.getI_name_color(), item.getI_market_hash_name(), item.getStickers(),
                     item.getUi_price() * 100, cashPrice4);
-            buy.insert(item, 4);
+            buy.insert(copy, 4);
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 4.");
         }
+
+        System.out.println("Price = " + item.getUi_price() * 100 + ", cashe good price = " + cashPrice1);
 
         NewItemGoListener.countOfThreads.decrementAndGet();
     }
