@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static resources.Props.WSS;
 
 public class NewItemGoListener {
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
     private WebSocket newItemGo;
-    private ExecutorService executorService = Executors.newFixedThreadPool(250);
 
     public NewItemGoListener() {
         try {
