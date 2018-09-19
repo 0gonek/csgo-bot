@@ -30,6 +30,28 @@ public class DBUtils {
                     "\taverage_price integer default 0;\n" +
                     ");";
 
+    private static final String CREATE_NEW_FEED =
+            //language=sql
+            "CREATE TABLE NEW_FEED(\n" +
+                    "\tc_classid bigint,\n" +
+                    "\tc_instanceid bigint,\n" +
+                    "\tc_price integer,\n" +
+                    "\tc_offers integer,\n" +
+                    "\tc_popularity integer,\n" +
+                    "\tc_rarity varchar(256),\n" +
+                    "\tc_quality varchar(256),\n" +
+                    "\tc_heroid integer,\n" +
+                    "\tc_slot varchar(256),\n" +
+                    "\tc_stickers varchar,\n" +
+                    "\tc_market_name text,\n" +
+                    "\tc_market_name_en text,\n" +
+                    "\tc_market_hash_name text,\n" +
+                    "\tc_name_color varchar(6),\n" +
+                    "\tc_price_updated integer,\n" +
+                    "\tc_pop integer,\n" +
+                    "\tc_base_id integer\n" +
+                    ");";
+
     private static final String CREATE_HISTORY_SQL =
             //language=sql
             "CREATE TABLE HISTORY(\n" +
@@ -103,6 +125,7 @@ public class DBUtils {
 //        dropTableIfExists(connection, "good_price");
 //        dropTableIfExists(connection, "buy_history");
 //        dropTableIfExists(connection, "history");
+//        dropTableIfExists(connection, "new_feed");
 
         //creating
         DBUtils.createFeedTable(connection);
@@ -111,6 +134,7 @@ public class DBUtils {
         DBUtils.createConstsTable(connection);
         DBUtils.createGoodPriceTable(connection);
         DBUtils.createBuyHistoryTable(connection);
+        DBUtils.createNewFeed(connection);
         connection.close();
     }
 
@@ -151,6 +175,12 @@ public class DBUtils {
         Statement statement = connection.createStatement();
         statement.execute(CREATE_GOOD_PRICE_SQL);
         System.out.println("Good_price table has been created successfully.");
+    }
+
+    static void createNewFeed(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(CREATE_NEW_FEED);
+        System.out.println("New_feed table has been created successfully.");
     }
 
     static void dropTableIfExists(Connection connection, String tableName) throws SQLException {

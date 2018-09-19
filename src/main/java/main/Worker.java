@@ -38,8 +38,9 @@ public class Worker {
         System.out.println("Cashe_3 size = " + GoodPriceCasheService.getGoodPriceCash3.size());
         System.out.println("Cashe_4 size = " + GoodPriceCasheService.getGoodPriceCash4.size());
 
-        Thread pingSender = new Thread(new Pinger());
-        pingSender.start();
+        //todo Починить Pinger
+//        Thread pingSender = new Thread(new Pinger());
+//        pingSender.start();
 
         System.out.println("Запуск веб-сокета..");
 

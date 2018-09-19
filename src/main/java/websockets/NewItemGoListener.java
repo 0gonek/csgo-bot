@@ -6,12 +6,15 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import jobs.Buyer;
 import java.io.IOException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import static resources.Props.WSS;
 
 public class NewItemGoListener {
-    public static AtomicInteger countOfThreads = new AtomicInteger(0);
     private WebSocket newItemGo;
+    private ExecutorService executorService = Executors.newFixedThreadPool(250);
 
     public NewItemGoListener() {
         try {
@@ -29,13 +32,7 @@ public class NewItemGoListener {
         newItemGo.addListener(new WebSocketAdapter() {
             @Override
             public void onTextMessage(WebSocket webSocket, String message) {
-                if (countOfThreads.get() > 250) return;
-
-                countOfThreads.incrementAndGet();
-                Thread th = new Thread(new Buyer(message));
-                th.setPriority(6);
-                th.start();
-
+                executorService.execute(new Buyer(message));
             }
         });
     }

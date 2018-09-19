@@ -73,8 +73,6 @@ public class Buyer implements Runnable {
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 4.");
         }
-
-        NewItemGoListener.countOfThreads.decrementAndGet();
     }
 
 }

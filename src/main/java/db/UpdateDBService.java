@@ -32,19 +32,11 @@ public class UpdateDBService implements Runnable {
                 CSVFileName fileName = gson.fromJson(HttpService.sendGETReq(CURRENT_DB_HTTP), CSVFileName.class);
                 Thread.sleep(1000);
                 HttpService.downLoadFile(DOWNLOAD_CSV + fileName.getDb(), CSV_FILE);
-
-
                 newFeedService.createConnection();
-
-                newFeedService.dropNewFeed();
-                newFeedService.createNewFeed();
-
+                newFeedService.deleteNewFeed();
                 newFeedService.uploadCsvToNewFeed();
                 newFeedService.mergeWithFeed();
-
                 newFeedService.closeConnection();
-
-                //штука которая добавляет в feed то чего там нет
 
                 Thread.sleep(1000 * 60 * 60 * 10); //10 часов
             } catch (InterruptedException e) {
