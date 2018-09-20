@@ -38,8 +38,9 @@ public class Worker {
         System.out.println("Cashe_3 size = " + GoodPriceCasheService.getGoodPriceCash3.size());
         System.out.println("Cashe_4 size = " + GoodPriceCasheService.getGoodPriceCash4.size());
 
-        Thread pingSender = new Thread(new Pinger());
-        pingSender.start();
+        //todo Починить Pinger
+//        Thread pingSender = new Thread(new Pinger());
+//        pingSender.start();
 
         System.out.println("Запуск веб-сокета..");
 
@@ -54,12 +55,6 @@ public class Worker {
 //        nl.disconnect();
 //
 //        System.exit(0);
-
-//
-//        BuyHistoryService buy = new BuyHistoryService();
-//        buy.insert(new Item("1111", "1111", "111111", "11111", "111111", "1111111", 8, 9 ));
-//        buy.closeConnection();
-//            nl.disconnect();
 
     }
 }

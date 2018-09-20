@@ -5,9 +5,6 @@ import java.util.Properties;
 
 public class DBUtils {
 
-    private static final String DROP_FEED_SQL =
-            //language=sql
-            "drop table FEED;";
     private static final String CREATE_FEED_SQL =
             //language=sql
             "CREATE TABLE FEED(\n" +
@@ -31,6 +28,28 @@ public class DBUtils {
                     "\tc_pop integer,\n" +
                     "\tc_base_id integer,\n" +
                     "\taverage_price integer default 0;\n" +
+                    ");";
+
+    private static final String CREATE_NEW_FEED =
+            //language=sql
+            "CREATE TABLE NEW_FEED(\n" +
+                    "\tc_classid bigint,\n" +
+                    "\tc_instanceid bigint,\n" +
+                    "\tc_price integer,\n" +
+                    "\tc_offers integer,\n" +
+                    "\tc_popularity integer,\n" +
+                    "\tc_rarity varchar(256),\n" +
+                    "\tc_quality varchar(256),\n" +
+                    "\tc_heroid integer,\n" +
+                    "\tc_slot varchar(256),\n" +
+                    "\tc_stickers varchar,\n" +
+                    "\tc_market_name text,\n" +
+                    "\tc_market_name_en text,\n" +
+                    "\tc_market_hash_name text,\n" +
+                    "\tc_name_color varchar(6),\n" +
+                    "\tc_price_updated integer,\n" +
+                    "\tc_pop integer,\n" +
+                    "\tc_base_id integer\n" +
                     ");";
 
     private static final String CREATE_HISTORY_SQL =
@@ -57,7 +76,7 @@ public class DBUtils {
                     "  avg bigint,\n" +
                     "  num int,\n" +
                     "  c_classid bigint,\n" +
-                    "\tc_instanceid bigint\n" +
+                    "  c_instanceid bigint\n" +
                     ");";
 
     private static final String CREATE_STATS_INDEX_SQL =
@@ -92,43 +111,30 @@ public class DBUtils {
                     "  mode integer\n" +
                     ");";
 
-    //Пример триггера todo повесить тириггер на таблицы для добавление записи без проверки на существование
-    private static final String INSERT_TRIGGER =
-            //language=sql
-            "CREATE FUNCTION foo_name() RETURNS trigger AS $foo_name$\n" +
-                    "BEGIN\n" +
-                    "\n" +
-                    "IF (exists(\n" +
-                    "\tselect 1 \n" +
-                    "\tfrom buy_history\n" +
-                    "\twhere )) \n" +
-                    "THEN\n" +
-                    "  update buy_history \n" +
-                    "  set  \n" +
-                    "  where ;\n" +
-                    "\treturn null;\n" +
-                    "END IF;\n" +
-                    "  \n" +
-                    "RETURN NEW;\n" +
-                    "END;\n" +
-                    "$foo_name$ LANGUAGE plpgsql;\n" +
-                    "CREATE TRIGGER check_history BEFORE INSERT ON t_name \n" +
-                    "FOR EACH ROW EXECUTE PROCEDURE foo_name();";
-
     private static final String CREATE_GOOD_PRICE_SQL =
             //language=sql
             "CREATE TABLE GOOD_PRICE( c_classid bigint, c_instanceid bigint, price bigint, update_time bigint, " +
                     "PRIMARY KEY (c_classid, c_instanceid));";
 
-    //TODO: Добавить удаление старых таблиц. С трай кечем - если таблиц не было, просто работать дальше.
     public static void reset() throws SQLException {
         Connection connection = createConnection();
-//        DBUtils.createFeedTable(connection);
-//        DBUtils.createHistoryTable(connection);
-//        DBUtils.createStatsTable(connection);
+        //dropping
+//        dropTableIfExists(connection, "feed");
+//        dropTableIfExists(connection, "stats");
+//        dropTableIfExists(connection, "consts");
+//        dropTableIfExists(connection, "good_price");
+//        dropTableIfExists(connection, "buy_history");
+//        dropTableIfExists(connection, "history");
+//        dropTableIfExists(connection, "new_feed");
+
+        //creating
+        DBUtils.createFeedTable(connection);
+        DBUtils.createHistoryTable(connection);
+        DBUtils.createStatsTable(connection);
         DBUtils.createConstsTable(connection);
         DBUtils.createGoodPriceTable(connection);
-//        DBUtils.setCreateBuyHistoryTable(connection);
+        DBUtils.createBuyHistoryTable(connection);
+        DBUtils.createNewFeed(connection);
         connection.close();
     }
 
@@ -159,7 +165,7 @@ public class DBUtils {
         System.out.println("Consts table has been created successfully.");
     }
 
-    static void setCreateBuyHistoryTable(Connection connection) throws SQLException {
+    static void createBuyHistoryTable(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         statement.execute(CREATE_BUY_HISTORY);
         System.out.println("Buy_history table has been created successfully.");
@@ -171,10 +177,16 @@ public class DBUtils {
         System.out.println("Good_price table has been created successfully.");
     }
 
-    static void dropFeedTable(Connection connection) throws SQLException {
+    static void createNewFeed(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        statement.execute(DROP_FEED_SQL);
-        System.out.println("FeedService table has been droped successfully.");
+        statement.execute(CREATE_NEW_FEED);
+        System.out.println("New_feed table has been created successfully.");
+    }
+
+    static void dropTableIfExists(Connection connection, String tableName) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute("drop table if exists " + tableName + ";");
+        System.out.println(tableName + " table has been dropped successfully.");
     }
 
     static int getFeedRowCount(Connection connection) throws SQLException {

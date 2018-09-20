@@ -20,9 +20,7 @@ public class Buyer implements Runnable {
         char[] arr = new char[message.length() - 32]; //30 число символов до нужной { + 2 лишние символа в конце
         int j = 0;
         for (int i = 30; i < message.length() - 2; ++i) {
-            if (message.charAt(i) == '\\' && (message.charAt(i + 1) == '\\' || message.charAt(i + 1) == '\"')) {
-                continue;
-            } else {
+            if (!(message.charAt(i) == '\\' && message.charAt(i - 1) != '\\')) {
                 arr[j++] = message.charAt(i);
             }
         }
@@ -34,21 +32,6 @@ public class Buyer implements Runnable {
 
         //Проверяем в кэше котим ли мы покупать этот предмет
         Item item = new Gson().fromJson(new String(arr), Item.class);
-
-//        Long cashPrice = GoodPriceCasheService.getGoodPriceCash.get(item.getPair());
-//        if (cashPrice == null) {
-//            NewItemGoListener.countOfThreads.decrementAndGet();
-//            return;
-//        }
-//        item.setW_price((double) cashPrice);
-//        item.setUi_price(item.getUi_price() * 100);
-//
-//        if (item.getW_price() >= item.getUi_price()) {
-//            BuyHistoryService buy = new BuyHistoryService();
-//            buy.insert(item, 0);
-//            buy.closeConnection();
-//            System.out.println(item + " - куплен!");
-//        }
 
         Long cashPrice1 = GoodPriceCasheService.getGoodPriceCash1.get(item.getPair());
         if (cashPrice1 != null && cashPrice1 >= item.getUi_price() * 100) {
@@ -90,8 +73,6 @@ public class Buyer implements Runnable {
             buy.closeConnection();
             System.out.println(item + " - куплен - mode = 4.");
         }
-
-        NewItemGoListener.countOfThreads.decrementAndGet();
     }
 
 }
